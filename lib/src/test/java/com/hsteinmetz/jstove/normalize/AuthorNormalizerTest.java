@@ -2,7 +2,7 @@ package com.hsteinmetz.jstove.normalize;
 
 import com.hsteinmetz.jstove.api.ParseOptions;
 import com.hsteinmetz.jstove.extract.FieldReader;
-import com.hsteinmetz.jstove.internal.WarningCollector;
+import com.hsteinmetz.jstove.internal.ParseIssueHandler;
 import com.hsteinmetz.jstove.jackson.ObjectMapperFactory;
 import com.hsteinmetz.jstove.model.AuthorInfo;
 import org.junit.jupiter.api.Assertions;
@@ -15,18 +15,18 @@ class AuthorNormalizerTest {
 
   private static final AuthorNormalizer normalizer = new AuthorNormalizer(new FieldReader());
   private static final ObjectMapper mapper = ObjectMapperFactory.getInstance().getObjectMapper();
-  private static final WarningCollector warningCollector =
-      new WarningCollector(ParseOptions.defaultOptions());
+  private static final ParseIssueHandler PARSE_ISSUE_HANDLER =
+      new ParseIssueHandler(ParseOptions.defaultOptions());
 
   @Test
   void testAuthorNormalizeReturnsEmptyOnNull() {
-    Assertions.assertTrue(normalizer.normalize(null, warningCollector).isEmpty());
+    Assertions.assertTrue(normalizer.normalize(null, PARSE_ISSUE_HANDLER).isEmpty());
   }
 
   @Test
   void testAuthorNormalizerTextOnly() {
     JsonNode node = JsonNodeFactory.instance.objectNode().put("author", "Jane Doe");
-    var result = normalizer.normalize(node.get("author"), warningCollector);
+    var result = normalizer.normalize(node.get("author"), PARSE_ISSUE_HANDLER);
     Assertions.assertTrue(result.isPresent());
     Assertions.assertEquals("Jane Doe", result.get().getFirst().name());
   }
@@ -40,7 +40,7 @@ class AuthorNormalizerTest {
       }
     """;
     JsonNode node = mapper.readTree(json);
-    var result = normalizer.normalize(node.get("author"), warningCollector);
+    var result = normalizer.normalize(node.get("author"), PARSE_ISSUE_HANDLER);
     Assertions.assertTrue(result.isPresent());
     Assertions.assertEquals(2, result.get().size());
     Assertions.assertEquals("Jane Doe", result.get().get(0).name());
@@ -60,7 +60,7 @@ class AuthorNormalizerTest {
       }
     """;
     JsonNode node = mapper.readTree(json);
-    var result = normalizer.normalize(node.get("author"), warningCollector);
+    var result = normalizer.normalize(node.get("author"), PARSE_ISSUE_HANDLER);
     Assertions.assertTrue(result.isPresent());
     Assertions.assertEquals(1, result.get().size());
     AuthorInfo author = result.get().getFirst();
@@ -89,7 +89,7 @@ class AuthorNormalizerTest {
       }
     """;
     JsonNode node = mapper.readTree(json);
-    var result = normalizer.normalize(node.get("author"), warningCollector);
+    var result = normalizer.normalize(node.get("author"), PARSE_ISSUE_HANDLER);
     Assertions.assertTrue(result.isPresent());
     Assertions.assertEquals(2, result.get().size());
     AuthorInfo author1 = result.get().get(0);

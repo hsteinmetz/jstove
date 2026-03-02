@@ -2,7 +2,7 @@ package com.hsteinmetz.jstove.normalize;
 
 import com.hsteinmetz.jstove.api.except.RecipeParseErrorCode;
 import com.hsteinmetz.jstove.extract.FieldReader;
-import com.hsteinmetz.jstove.internal.WarningCollector;
+import com.hsteinmetz.jstove.internal.ParseIssueHandler;
 import com.hsteinmetz.jstove.model.AuthorInfo;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ public class AuthorNormalizer implements GenericNormalizer<List<AuthorInfo>> {
   }
 
   public Optional<List<AuthorInfo>> normalize(
-      JsonNode authorNode, WarningCollector warningCollector) {
+      JsonNode authorNode, ParseIssueHandler parseIssueHandler) {
     if (authorNode == null || authorNode.isNull()) {
       return Optional.empty();
     }
@@ -32,7 +32,7 @@ public class AuthorNormalizer implements GenericNormalizer<List<AuthorInfo>> {
         } else if (author.isString()) {
           authors.add(new AuthorInfo(author.asString(), null, null));
         } else {
-          warningCollector.warnOrThrow(
+          parseIssueHandler.warnOrThrow(
               RecipeParseErrorCode.FIELD_UNSUPPORTED_SHAPE,
               "author",
               "Unsupported shape for author field; expected object, string or array",
@@ -47,7 +47,7 @@ public class AuthorNormalizer implements GenericNormalizer<List<AuthorInfo>> {
       AuthorInfo author = new AuthorInfo(authorNode.asString(), null, null);
       return Optional.of(List.of(author));
     } else {
-      warningCollector.warnOrThrow(
+      parseIssueHandler.warnOrThrow(
           RecipeParseErrorCode.FIELD_UNSUPPORTED_SHAPE,
           "author",
           "Unsupported shape for author field; expected object, string or array",

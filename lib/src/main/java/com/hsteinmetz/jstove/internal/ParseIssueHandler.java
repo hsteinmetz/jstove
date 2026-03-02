@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import tools.jackson.core.JsonPointer;
 
-public final class WarningCollector {
+public final class ParseIssueHandler {
   private final ParseOptions parseOptions;
 
   private final List<ParseWarning> warnings = new ArrayList<>();
 
-  public WarningCollector(ParseOptions parseOptions) {
+  public ParseIssueHandler(ParseOptions parseOptions) {
     this.parseOptions = parseOptions;
   }
 

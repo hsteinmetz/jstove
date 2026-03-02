@@ -65,34 +65,34 @@ public final class DefaultRecipeParser implements RecipeParser {
    */
   @Override
   public ParseResult parse(JsonNode root) {
-    WarningCollector warningCollector = new WarningCollector(this.parseOptions);
+    ParseIssueHandler parseIssueHandler = new ParseIssueHandler(this.parseOptions);
     List<JsonNode> candidates = locator.locate(root);
-    Optional<JsonNode> best = selector.selectBest(candidates, warningCollector);
+    Optional<JsonNode> best = selector.selectBest(candidates, parseIssueHandler);
 
     if (best.isEmpty()) {
-      warningCollector.warnOrThrow(
+      parseIssueHandler.warnOrThrow(
           RecipeParseErrorCode.NO_RECIPE_NODE,
           "@root",
           "No recipe node found in the input JSON",
           null);
 
-      return new ParseResult(normalizer.emptyRecipe(), warningCollector.toList(), Map.of());
+      return new ParseResult(normalizer.emptyRecipe(), parseIssueHandler.toList(), Map.of());
     }
 
-    Optional<Recipe> normalizedResult = normalizer.normalize(best.get(), warningCollector);
+    Optional<Recipe> normalizedResult = normalizer.normalize(best.get(), parseIssueHandler);
 
     if (normalizedResult.isEmpty()) {
-      warningCollector.warnOrThrow(
+      parseIssueHandler.warnOrThrow(
           RecipeParseErrorCode.RECIPE_NORMALIZATION_FAILED,
           best.get().asString(),
           "Failed to normalize the recipe node",
           null);
-      return new ParseResult(normalizer.emptyRecipe(), warningCollector.toList(), Map.of());
+      return new ParseResult(normalizer.emptyRecipe(), parseIssueHandler.toList(), Map.of());
     }
 
     Recipe normalizedRecipe = normalizedResult.get();
 
-    return new ParseResult(normalizedRecipe, warningCollector.toList(), Map.of());
+    return new ParseResult(normalizedRecipe, parseIssueHandler.toList(), Map.of());
   }
 
   /**
