@@ -19,7 +19,7 @@ public class RecipeNodeSelector {
     }
 
     if (candidates.size() > 1) {
-      warningCollector.addWarning(
+      warningCollector.warnOrThrow(
           RecipeParseErrorCode.MULTIPLE_RECIPE_NODES,
           "@root",
           "Multiple recipe nodes found; selecting best candidate",

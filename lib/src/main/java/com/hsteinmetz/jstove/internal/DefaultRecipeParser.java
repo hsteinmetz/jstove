@@ -33,8 +33,6 @@ public final class DefaultRecipeParser implements RecipeParser {
   private final RecipeNodeSelector selector;
   private final RecipeNormalizer normalizer;
 
-  private final Strictness strictness;
-
   private final ObjectMapper objectMapper = ObjectMapperFactory.getInstance().getObjectMapper();
 
   /**
@@ -57,8 +55,6 @@ public final class DefaultRecipeParser implements RecipeParser {
     this.locator = locator;
     this.selector = selector;
     this.normalizer = normalizer;
-
-    this.strictness = new Strictness(this.parseOptions);
   }
 
   /**
@@ -69,36 +65,34 @@ public final class DefaultRecipeParser implements RecipeParser {
    */
   @Override
   public ParseResult parse(JsonNode root) {
-    WarningCollector warnings = new WarningCollector();
+    WarningCollector warningCollector = new WarningCollector(this.parseOptions);
     List<JsonNode> candidates = locator.locate(root);
-    Optional<JsonNode> best = selector.selectBest(candidates, warnings);
+    Optional<JsonNode> best = selector.selectBest(candidates, warningCollector);
 
     if (best.isEmpty()) {
-      strictness.warnOrThrow(
-          warnings,
+      warningCollector.warnOrThrow(
           RecipeParseErrorCode.NO_RECIPE_NODE,
           "@root",
           "No recipe node found in the input JSON",
           null);
 
-      return new ParseResult(normalizer.emptyRecipe(), warnings.toList(), Map.of());
+      return new ParseResult(normalizer.emptyRecipe(), warningCollector.toList(), Map.of());
     }
 
-    Optional<Recipe> normalizedResult = normalizer.normalize(best.get(), parseOptions, warnings);
+    Optional<Recipe> normalizedResult = normalizer.normalize(best.get(), warningCollector);
 
     if (normalizedResult.isEmpty()) {
-      strictness.warnOrThrow(
-          warnings,
+      warningCollector.warnOrThrow(
           RecipeParseErrorCode.RECIPE_NORMALIZATION_FAILED,
           best.get().asString(),
           "Failed to normalize the recipe node",
           null);
-      return new ParseResult(normalizer.emptyRecipe(), warnings.toList(), Map.of());
+      return new ParseResult(normalizer.emptyRecipe(), warningCollector.toList(), Map.of());
     }
 
     Recipe normalizedRecipe = normalizedResult.get();
 
-    return new ParseResult(normalizedRecipe, warnings.toList(), Map.of());
+    return new ParseResult(normalizedRecipe, warningCollector.toList(), Map.of());
   }
 
   /**

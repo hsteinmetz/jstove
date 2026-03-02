@@ -1,6 +1,5 @@
 package com.hsteinmetz.jstove.normalize;
 
-import com.hsteinmetz.jstove.api.ParseOptions;
 import com.hsteinmetz.jstove.api.except.RecipeParseErrorCode;
 import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.WarningCollector;
@@ -19,9 +18,8 @@ public class AuthorNormalizer implements GenericNormalizer<List<AuthorInfo>> {
     this.reader = reader;
   }
 
-  // TODO: use Strictness instead of directly adding warnings
   public Optional<List<AuthorInfo>> normalize(
-      JsonNode authorNode, ParseOptions options, WarningCollector warningCollector) {
+      JsonNode authorNode, WarningCollector warningCollector) {
     if (authorNode == null || authorNode.isNull()) {
       return Optional.empty();
     }
@@ -34,7 +32,7 @@ public class AuthorNormalizer implements GenericNormalizer<List<AuthorInfo>> {
         } else if (author.isString()) {
           authors.add(new AuthorInfo(author.asString(), null, null));
         } else {
-          warningCollector.addWarning(
+          warningCollector.warnOrThrow(
               RecipeParseErrorCode.FIELD_UNSUPPORTED_SHAPE,
               "author",
               "Unsupported shape for author field; expected object, string or array",
@@ -49,7 +47,7 @@ public class AuthorNormalizer implements GenericNormalizer<List<AuthorInfo>> {
       AuthorInfo author = new AuthorInfo(authorNode.asString(), null, null);
       return Optional.of(List.of(author));
     } else {
-      warningCollector.addWarning(
+      warningCollector.warnOrThrow(
           RecipeParseErrorCode.FIELD_UNSUPPORTED_SHAPE,
           "author",
           "Unsupported shape for author field; expected object, string or array",

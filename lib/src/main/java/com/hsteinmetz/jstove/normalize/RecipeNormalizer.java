@@ -1,6 +1,5 @@
 package com.hsteinmetz.jstove.normalize;
 
-import com.hsteinmetz.jstove.api.ParseOptions;
 import com.hsteinmetz.jstove.api.except.RecipeParseErrorCode;
 import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.WarningCollector;
@@ -22,10 +21,9 @@ public class RecipeNormalizer implements GenericNormalizer<Recipe> {
     return Recipe.empty();
   }
 
-  public Optional<Recipe> normalize(
-      JsonNode recipeNode, ParseOptions parseOptions, WarningCollector warningCollector) {
+  public Optional<Recipe> normalize(JsonNode recipeNode, WarningCollector warningCollector) {
     if (recipeNode == null || recipeNode.isNull() || recipeNode.isMissingNode()) {
-      warningCollector.addWarning(
+      warningCollector.warnOrThrow(
           RecipeParseErrorCode.NO_RECIPE_NODE,
           "@root",
           "No recipe node found; using empty recipe",
@@ -46,8 +44,7 @@ public class RecipeNormalizer implements GenericNormalizer<Recipe> {
     List<MediaRef> images = List.of();
     List<AuthorInfo> authors =
         new AuthorNormalizer(reader)
-            .normalize(
-                reader.read(recipeNode, "author").orElse(null), parseOptions, warningCollector)
+            .normalize(reader.read(recipeNode, "author").orElse(null), warningCollector)
             .orElse(List.of());
 
     Duration prep = Duration.ZERO;
@@ -61,7 +58,7 @@ public class RecipeNormalizer implements GenericNormalizer<Recipe> {
         new SourceMetadata(
             "json-ld",
             reader.readAsText(recipeNode, "@type").orElse(""),
-            parseOptions.keepSourceNode() ? recipeNode : null);
+            warningCollector.getParseOptions().keepSourceNode() ? recipeNode : null);
 
     Recipe result =
         new Recipe(
