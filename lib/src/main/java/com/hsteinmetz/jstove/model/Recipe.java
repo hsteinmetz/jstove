@@ -15,4 +15,21 @@ public record Recipe(
     List<MediaRef> images,
     List<AuthorInfo> authors,
     String sourceUrl,
-    SourceMetadata sourceMetadata) {}
+    SourceMetadata sourceMetadata) {
+  public static Recipe empty() {
+    return new Recipe(
+        null,
+        null,
+        List.of(),
+        List.of(),
+        new TimeInfo(null, null, null),
+        null,
+        new NutritionInfo(null, null, null, null, null),
+        List.of(),
+        List.of(),
+        List.of(),
+        List.of(),
+        null,
+        null);
+  }
+}

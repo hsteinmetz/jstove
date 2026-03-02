@@ -1,0 +1,111 @@
+package com.hsteinmetz.jstove.normalize;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import com.hsteinmetz.jstove.api.ParseOptions;
+import com.hsteinmetz.jstove.extract.FieldReader;
+import com.hsteinmetz.jstove.internal.WarningCollector;
+import com.hsteinmetz.jstove.jackson.ObjectMapperFactory;
+import com.hsteinmetz.jstove.model.AuthorInfo;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.JsonNodeFactory;
+
+class AuthorNormalizerTest {
+
+  private static final AuthorNormalizer normalizer = new AuthorNormalizer(new FieldReader());
+  private static final ObjectMapper mapper = ObjectMapperFactory.getInstance().getObjectMapper();
+  private static final WarningCollector warningCollector = new WarningCollector();
+
+  @Test
+  void testAuthorNormalizeReturnsEmptyOnNull() {
+    Assertions.assertTrue(
+        normalizer.normalize(null, ParseOptions.defaultOptions(), warningCollector).isEmpty());
+  }
+
+  @Test
+  void testAuthorNormalizerTextOnly() {
+    JsonNode node = JsonNodeFactory.instance.objectNode().put("author", "Jane Doe");
+    var result =
+        normalizer.normalize(node.get("author"), ParseOptions.defaultOptions(), warningCollector);
+    Assertions.assertTrue(result.isPresent());
+    Assertions.assertEquals("Jane Doe", result.get().getFirst().name());
+  }
+
+  @Test
+  void testAuthorNormalizerArrayOfStrings() {
+    String json =
+        """
+      {
+        "author": ["Jane Doe", "John Smith"]
+      }
+    """;
+    JsonNode node = mapper.readTree(json);
+    var result =
+        normalizer.normalize(node.get("author"), ParseOptions.defaultOptions(), warningCollector);
+    Assertions.assertTrue(result.isPresent());
+    Assertions.assertEquals(2, result.get().size());
+    Assertions.assertEquals("Jane Doe", result.get().get(0).name());
+    Assertions.assertEquals("John Smith", result.get().get(1).name());
+  }
+
+  @Test
+  void testAuthorObject() {
+    String json =
+        """
+      {
+        "author": {
+          "name": "Jane Doe",
+          "email": "janedoe@acme.com",
+          "url": "https://example.com/janedoe"
+        }
+      }
+    """;
+    JsonNode node = mapper.readTree(json);
+    var result =
+        normalizer.normalize(node.get("author"), ParseOptions.defaultOptions(), warningCollector);
+    Assertions.assertTrue(result.isPresent());
+    Assertions.assertEquals(1, result.get().size());
+    AuthorInfo author = result.get().getFirst();
+    Assertions.assertEquals("Jane Doe", author.name());
+    Assertions.assertEquals("janedoe@acme.com", author.email());
+    Assertions.assertEquals("https://example.com/janedoe", author.url());
+  }
+
+  @Test
+  void testAuthorArrayOfObjects() {
+    String json =
+        """
+      {
+        "author": [
+          {
+            "name": "Jane Doe",
+            "email": "janedoe@acme.com",
+            "url": "https://example.com/janedoe"
+          },
+          {
+            "name": "John Smith",
+            "email": "johnsmith@gmail.com",
+            "url": "https://example.com/johnsmith"
+          }
+        ]
+      }
+    """;
+    JsonNode node = mapper.readTree(json);
+    var result =
+        normalizer.normalize(node.get("author"), ParseOptions.defaultOptions(), warningCollector);
+    Assertions.assertTrue(result.isPresent());
+    Assertions.assertEquals(2, result.get().size());
+    AuthorInfo author1 = result.get().get(0);
+    AuthorInfo author2 = result.get().get(1);
+    Assertions.assertEquals("Jane Doe", author1.name());
+    Assertions.assertEquals("janedoe@acme.com", author1.email());
+    Assertions.assertEquals("https://example.com/janedoe", author1.url());
+
+    Assertions.assertEquals("John Smith", author2.name());
+    Assertions.assertEquals("johnsmith@gmail.com", author2.email());
+    Assertions.assertEquals("https://example.com/johnsmith", author2.url());
+  }
+}

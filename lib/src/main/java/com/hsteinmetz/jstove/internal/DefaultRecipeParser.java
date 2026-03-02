@@ -84,7 +84,19 @@ public final class DefaultRecipeParser implements RecipeParser {
       return new ParseResult(normalizer.emptyRecipe(), warnings.toList(), Map.of());
     }
 
-    Recipe normalizedRecipe = normalizer.normalize(best.get(), parseOptions, warnings);
+    Optional<Recipe> normalizedResult = normalizer.normalize(best.get(), parseOptions, warnings);
+
+    if (normalizedResult.isEmpty()) {
+      strictness.warnOrThrow(
+          warnings,
+          RecipeParseErrorCode.RECIPE_NORMALIZATION_FAILED,
+          best.get().asString(),
+          "Failed to normalize the recipe node",
+          null);
+      return new ParseResult(normalizer.emptyRecipe(), warnings.toList(), Map.of());
+    }
+
+    Recipe normalizedRecipe = normalizedResult.get();
 
     return new ParseResult(normalizedRecipe, warnings.toList(), Map.of());
   }

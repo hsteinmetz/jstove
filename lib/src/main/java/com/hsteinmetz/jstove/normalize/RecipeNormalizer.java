@@ -7,9 +7,10 @@ import com.hsteinmetz.jstove.internal.WarningCollector;
 import com.hsteinmetz.jstove.model.*;
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 import tools.jackson.databind.JsonNode;
 
-public class RecipeNormalizer {
+public class RecipeNormalizer implements GenericNormalizer<Recipe> {
 
   private final FieldReader reader;
 
@@ -18,10 +19,10 @@ public class RecipeNormalizer {
   }
 
   public Recipe emptyRecipe() {
-    return new Recipe(null, null, null, null, null, null, null, null, null, null, null, null, null);
+    return Recipe.empty();
   }
 
-  public Recipe normalize(
+  public Optional<Recipe> normalize(
       JsonNode recipeNode, ParseOptions parseOptions, WarningCollector warningCollector) {
     if (recipeNode == null || recipeNode.isNull() || recipeNode.isMissingNode()) {
       warningCollector.addWarning(
@@ -29,7 +30,7 @@ public class RecipeNormalizer {
           "@root",
           "No recipe node found; using empty recipe",
           null);
-      return emptyRecipe();
+      return Optional.of(emptyRecipe());
     }
     String title = reader.readFirstText(recipeNode, "name", "headline", "title").orElse(null);
     String description = reader.readAsText(recipeNode, "description").orElse(null);
@@ -43,7 +44,11 @@ public class RecipeNormalizer {
     List<Ingredient> ingredients = List.of();
     List<InstructionBlock> instructions = List.of();
     List<MediaRef> images = List.of();
-    List<AuthorInfo> authors = List.of();
+    List<AuthorInfo> authors =
+        new AuthorNormalizer(reader)
+            .normalize(
+                reader.read(recipeNode, "author").orElse(null), parseOptions, warningCollector)
+            .orElse(List.of());
 
     Duration prep = Duration.ZERO;
     Duration cook = Duration.ZERO;
@@ -58,19 +63,22 @@ public class RecipeNormalizer {
             reader.readAsText(recipeNode, "@type").orElse(""),
             parseOptions.keepSourceNode() ? recipeNode : null);
 
-    return new Recipe(
-        title,
-        description,
-        ingredients,
-        instructions,
-        timeInfo,
-        yield,
-        nutritionInfo,
-        categories,
-        cuisines,
-        images,
-        authors,
-        sourceUrl,
-        sourceMetadata);
+    Recipe result =
+        new Recipe(
+            title,
+            description,
+            ingredients,
+            instructions,
+            timeInfo,
+            yield,
+            nutritionInfo,
+            categories,
+            cuisines,
+            images,
+            authors,
+            sourceUrl,
+            sourceMetadata);
+
+    return Optional.of(result);
   }
 }
