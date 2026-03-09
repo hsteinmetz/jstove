@@ -3,15 +3,18 @@ package com.hsteinmetz.jstove.normalize;
 import com.hsteinmetz.jstove.api.except.RecipeParseErrorCode;
 import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.ParseIssueHandler;
+import com.hsteinmetz.jstove.jackson.ObjectMapperFactory;
 import com.hsteinmetz.jstove.model.Ingredient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 // TODO: Strictness handling: Currently this fails instantly if one ingredient is malformed. While
 // this may be desirable in strict mode, in lenient mode it may be better to just skip malformed
 // ingredients and continue parsing the rest of the list.
+// TODO: if the raw node is to be kept, store it in the ingredient object
 /**
  * Normalizer for the recipeIngredient field. This field can be either an array of strings or an
  * ItemList object with an itemListElement array of strings. This normalizer handles both cases and
@@ -41,6 +44,8 @@ import tools.jackson.databind.JsonNode;
  */
 public class IngredientNormalizer extends GenericNormalizer<List<Ingredient>> {
 
+  private final ObjectMapper mapper = ObjectMapperFactory.getInstance().getObjectMapper();
+
   public IngredientNormalizer(FieldReader reader) {
     super(reader);
   }
@@ -55,7 +60,7 @@ public class IngredientNormalizer extends GenericNormalizer<List<Ingredient>> {
     if (input.isArray()) {
       for (JsonNode node : input) {
         if (node.isString()) {
-          ingredients.add(new Ingredient(node.asString()));
+          ingredients.add(new Ingredient(node.asString(), null));
         } else {
           parseIssueHandler.warnOrThrow(
               RecipeParseErrorCode.FIELD_UNSUPPORTED_SHAPE,
@@ -114,7 +119,7 @@ public class IngredientNormalizer extends GenericNormalizer<List<Ingredient>> {
 
       for (JsonNode item : itemListElement) {
         if (item.isString()) {
-          ingredients.add(new Ingredient(item.asString()));
+          ingredients.add(new Ingredient(item.asString(), null));
         } else {
           parseIssueHandler.warnOrThrow(
               RecipeParseErrorCode.FIELD_UNSUPPORTED_SHAPE,
