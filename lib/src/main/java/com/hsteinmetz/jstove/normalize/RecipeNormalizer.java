@@ -9,12 +9,10 @@ import java.util.List;
 import java.util.Optional;
 import tools.jackson.databind.JsonNode;
 
-public class RecipeNormalizer implements GenericNormalizer<Recipe> {
+public class RecipeNormalizer extends GenericNormalizer<Recipe> {
 
-  private final FieldReader reader;
-
-  public RecipeNormalizer() {
-    this.reader = new FieldReader();
+  public RecipeNormalizer(FieldReader reader) {
+    super(reader);
   }
 
   public Recipe emptyRecipe() {

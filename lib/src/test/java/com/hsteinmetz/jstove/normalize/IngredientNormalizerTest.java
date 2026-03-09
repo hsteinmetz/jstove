@@ -156,4 +156,36 @@ class IngredientNormalizerTest {
     assertTrue(result.isEmpty());
     assertFalse(parseIssueHandler.toList().isEmpty());
   }
+
+  @Test
+  void testNormalizeUnsupportedShape() {
+    String json =
+        """
+            {
+            "unexpectedField": "unexpectedValue"
+            }
+            """;
+    var input = objectMapper.readTree(json);
+    var result = ingredientNormalizer.normalize(input, parseIssueHandler);
+    assertTrue(result.isEmpty());
+    assertFalse(parseIssueHandler.toList().isEmpty());
+  }
+
+  @Test
+  void testNormalizeUnsupportedShapeInArray() {
+    String json =
+        """
+                [
+                "1 cup flour",
+                {
+                    "unexpectedField": "unexpectedValue"
+                },
+                "1/2 cup sugar"
+                ]
+                """;
+    var input = objectMapper.readTree(json);
+    var result = ingredientNormalizer.normalize(input, parseIssueHandler);
+    assertTrue(result.isEmpty());
+    assertFalse(parseIssueHandler.toList().isEmpty());
+  }
 }

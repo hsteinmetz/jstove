@@ -10,12 +10,10 @@ import java.util.Optional;
 import tools.jackson.core.JsonPointer;
 import tools.jackson.databind.JsonNode;
 
-public class AuthorNormalizer implements GenericNormalizer<List<AuthorInfo>> {
-
-  private final FieldReader reader;
+public class AuthorNormalizer extends GenericNormalizer<List<AuthorInfo>> {
 
   public AuthorNormalizer(FieldReader reader) {
-    this.reader = reader;
+    super(reader);
   }
 
   public Optional<List<AuthorInfo>> normalize(

@@ -102,4 +102,19 @@ class AuthorNormalizerTest {
     Assertions.assertEquals("johnsmith@gmail.com", author2.email());
     Assertions.assertEquals("https://example.com/johnsmith", author2.url());
   }
+
+  @Test
+  void testAuthorNormalizerUnsupportedShape() {
+    String json =
+        """
+        {
+            "author": 12345
+            }
+        """;
+    JsonNode node = mapper.readTree(json);
+    var result = normalizer.normalize(node.get("author"), PARSE_ISSUE_HANDLER);
+    Assertions.assertTrue(result.isEmpty());
+    Assertions.assertFalse(PARSE_ISSUE_HANDLER.isEmpty());
+    Assertions.assertEquals(1, PARSE_ISSUE_HANDLER.toList().size());
+  }
 }

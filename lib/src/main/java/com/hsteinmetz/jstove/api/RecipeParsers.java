@@ -1,5 +1,6 @@
 package com.hsteinmetz.jstove.api;
 
+import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.extract.JsonReader;
 import com.hsteinmetz.jstove.internal.DefaultRecipeParser;
 
@@ -38,6 +39,6 @@ public class RecipeParsers {
         options,
         new com.hsteinmetz.jstove.normalize.RecipeNodeLocator(),
         new com.hsteinmetz.jstove.normalize.RecipeNodeSelector(),
-        new com.hsteinmetz.jstove.normalize.RecipeNormalizer());
+        new com.hsteinmetz.jstove.normalize.RecipeNormalizer(new FieldReader()));
   }
 }

@@ -1,10 +1,17 @@
 package com.hsteinmetz.jstove.normalize;
 
+import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.ParseIssueHandler;
 import java.util.Optional;
 import tools.jackson.databind.JsonNode;
 
-public interface GenericNormalizer<T> {
+public abstract class GenericNormalizer<T> {
 
-  public Optional<T> normalize(JsonNode input, ParseIssueHandler parseIssueHandler);
+  protected final FieldReader reader;
+
+  public GenericNormalizer(FieldReader reader) {
+    this.reader = reader;
+  }
+
+  public abstract Optional<T> normalize(JsonNode input, ParseIssueHandler parseIssueHandler);
 }
