@@ -39,7 +39,10 @@ public class RecipeNormalizer implements GenericNormalizer<Recipe> {
     List<String> cuisines = reader.readStringList(recipeNode, "recipeCuisine");
 
     // TODO
-    List<Ingredient> ingredients = List.of();
+    List<Ingredient> ingredients =
+        new IngredientNormalizer(this.reader)
+            .normalize(reader.read(recipeNode, "recipeIngredient").orElse(null), parseIssueHandler)
+            .orElse(List.of());
     List<InstructionBlock> instructions = List.of();
     List<MediaRef> images = List.of();
     List<AuthorInfo> authors =
