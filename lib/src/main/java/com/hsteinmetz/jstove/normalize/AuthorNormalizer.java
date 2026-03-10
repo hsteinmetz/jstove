@@ -4,6 +4,7 @@ import com.hsteinmetz.jstove.api.except.RecipeParseErrorCode;
 import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.ParseIssueHandler;
 import com.hsteinmetz.jstove.model.AuthorInfo;
+import com.hsteinmetz.jstove.normalize.util.NormalizationUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,9 +22,7 @@ public class AuthorNormalizer extends GenericNormalizer<List<AuthorInfo>> {
 
   public Optional<List<AuthorInfo>> normalize(
       JsonNode authorNode, ParseIssueHandler parseIssueHandler) {
-    if (authorNode == null || authorNode.isNull()) {
-      return Optional.empty();
-    }
+    if (NormalizationUtils.isNullOrEmptyNode(authorNode)) return Optional.empty();
 
     if (authorNode.isArray()) {
       List<AuthorInfo> authors = new ArrayList<>();

@@ -5,6 +5,7 @@ import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.ParseIssueHandler;
 import com.hsteinmetz.jstove.model.InstructionSection;
 import com.hsteinmetz.jstove.model.InstructionStep;
+import com.hsteinmetz.jstove.normalize.util.NormalizationUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,14 +41,7 @@ public class InstructionNormalizer extends GenericNormalizer<List<InstructionSec
       JsonNode input, ParseIssueHandler parseIssueHandler) {
     var sections = new ArrayList<InstructionSection>();
 
-    if (input == null || input.isNull() || input.isMissingNode()) {
-      parseIssueHandler.warnOrThrow(
-          RecipeParseErrorCode.NO_INSTRUCTION_NODE,
-          "@root",
-          "No instruction node found; using empty instructions",
-          null);
-      return Optional.empty();
-    }
+    if (NormalizationUtils.isNullOrEmptyNode(input)) return Optional.empty();
 
     if (input.isString()) {
       var instructions = new InstructionStep(input.asString(), 0, null, Map.of());

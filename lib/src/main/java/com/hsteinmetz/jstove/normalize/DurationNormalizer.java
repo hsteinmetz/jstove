@@ -3,6 +3,7 @@ package com.hsteinmetz.jstove.normalize;
 import com.hsteinmetz.jstove.api.except.RecipeParseErrorCode;
 import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.ParseIssueHandler;
+import com.hsteinmetz.jstove.normalize.util.NormalizationUtils;
 import java.time.Duration;
 import java.util.Optional;
 import tools.jackson.databind.JsonNode;
@@ -18,14 +19,7 @@ public class DurationNormalizer extends GenericNormalizer<Duration> {
 
   @Override
   public Optional<Duration> normalize(JsonNode input, ParseIssueHandler parseIssueHandler) {
-    if (input == null || input.isNull() || input.isMissingNode()) {
-      parseIssueHandler.warnOrThrow(
-          RecipeParseErrorCode.DURATION_INVALID,
-          "@root",
-          "No duration node found; using zero duration",
-          null);
-      return Optional.empty();
-    }
+    if (NormalizationUtils.isNullOrEmptyNode(input)) return Optional.empty();
 
     if (input.isString()) {
       try {

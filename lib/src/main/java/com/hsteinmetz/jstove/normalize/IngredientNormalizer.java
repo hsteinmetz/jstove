@@ -5,6 +5,7 @@ import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.ParseIssueHandler;
 import com.hsteinmetz.jstove.jackson.ObjectMapperFactory;
 import com.hsteinmetz.jstove.model.Ingredient;
+import com.hsteinmetz.jstove.normalize.util.NormalizationUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -53,9 +54,8 @@ public class IngredientNormalizer extends GenericNormalizer<List<Ingredient>> {
 
   @Override
   public Optional<List<Ingredient>> normalize(JsonNode input, ParseIssueHandler parseIssueHandler) {
-    if (input == null || input.isNull() || input.isMissingNode()) {
-      return Optional.empty();
-    }
+    if (NormalizationUtils.isNullOrEmptyNode(input)) return Optional.empty();
+
     List<Ingredient> ingredients = new ArrayList<>();
 
     if (input.isArray()) {
