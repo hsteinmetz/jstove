@@ -2,6 +2,9 @@ package com.hsteinmetz.jstove.model;
 
 import java.util.List;
 
+/**
+ * @author Hendrik Steinmetz
+ */
 public record Recipe(
     String title,
     String description,

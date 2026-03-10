@@ -8,11 +8,14 @@ import tools.jackson.databind.JsonNode;
  * from different sources, such as a JSON string, an input stream, or a JSON node. The parsing
  * process produces a {@link ParseResult} that encapsulates the parsed recipe and any warnings or
  * errors that occurred during parsing.
+ *
+ * @author Hendrik Steinmetz
  */
 public interface RecipeParser {
 
-    ParseResult parse(String json);
-    ParseResult parse(InputStream json);
-    ParseResult parse(JsonNode root);
+  ParseResult parse(String json);
 
+  ParseResult parse(InputStream json);
+
+  ParseResult parse(JsonNode root);
 }

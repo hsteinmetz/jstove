@@ -3,6 +3,9 @@ package com.hsteinmetz.jstove.model;
 import java.util.Map;
 import tools.jackson.databind.JsonNode;
 
+/**
+ * @author Hendrik Steinmetz
+ */
 public record Ingredient(
     String displayText,
     String name,

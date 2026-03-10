@@ -10,6 +10,9 @@ import java.util.Optional;
 import tools.jackson.core.JsonPointer;
 import tools.jackson.databind.JsonNode;
 
+/**
+ * @author Hendrik Steinmetz
+ */
 public class AuthorNormalizer extends GenericNormalizer<List<AuthorInfo>> {
 
   public AuthorNormalizer(FieldReader reader) {

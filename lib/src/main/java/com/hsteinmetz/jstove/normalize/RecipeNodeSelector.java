@@ -7,8 +7,9 @@ import java.util.Optional;
 import tools.jackson.databind.JsonNode;
 
 /**
- * Selects the "best" node from a list of nodes. This is used to select the "best" recipe node from
- * a list of candidate nodes.
+ * Selects the "best" node from a list of nodes.
+ *
+ * @author Hendrik Steinmetz
  */
 public class RecipeNodeSelector {
 

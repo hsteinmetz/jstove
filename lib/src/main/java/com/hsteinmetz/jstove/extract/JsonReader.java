@@ -5,6 +5,9 @@ import java.io.InputStream;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
+/**
+ * @author Hendrik Steinmetz
+ */
 public class JsonReader {
 
   private static final ObjectMapper mapper = ObjectMapperFactory.getInstance().getObjectMapper();

@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import tools.jackson.databind.JsonNode;
 
+/**
+ * @author Hendrik Steinmetz
+ */
 public class FieldReader {
 
   public Optional<JsonNode> read(JsonNode node, String fieldName) {

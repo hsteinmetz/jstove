@@ -4,6 +4,9 @@ import tools.jackson.databind.JsonNode;
 
 import java.util.Map;
 
+/**
+ * @author Hendrik Steinmetz
+ */
 public record InstructionStep (
         String text,
         Integer position,

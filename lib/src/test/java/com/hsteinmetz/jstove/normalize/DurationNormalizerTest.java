@@ -11,6 +11,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.ObjectMapper;
 
+/**
+ * @author Hendrik Steinmetz
+ */
 class DurationNormalizerTest {
 
   private static DurationNormalizer normalizer;

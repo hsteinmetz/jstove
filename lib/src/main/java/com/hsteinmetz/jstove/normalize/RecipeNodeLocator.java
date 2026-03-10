@@ -8,6 +8,8 @@ import tools.jackson.databind.JsonNode;
  * Responsible for locating the relevant nodes in the JSON structure that represent the recipe and
  * its components. Does not perform any selection or normalization, but simply identifies the nodes
  * that should be processed by the RecipeNodeSelector and RecipeNormalizer.
+ *
+ * @author Hendrik Steinmetz
  */
 public class RecipeNodeLocator {
 

@@ -11,6 +11,8 @@ import com.hsteinmetz.jstove.internal.DefaultRecipeParser;
  * for unknown fields, missing fields, and extra fields without throwing errors. This factory class
  * serves as a convenient way to access commonly used recipe parsers without needing to configure
  * them manually.
+ *
+ * @author Hendrik Steinmetz
  */
 public class RecipeParsers {
 

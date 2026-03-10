@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import tools.jackson.core.JsonPointer;
 
+/**
+ * @author Hendrik Steinmetz
+ */
 public final class ParseIssueHandler {
   private final ParseOptions parseOptions;
 

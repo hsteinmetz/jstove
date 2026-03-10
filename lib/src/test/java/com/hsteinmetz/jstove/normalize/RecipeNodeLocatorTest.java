@@ -10,6 +10,9 @@ import org.junit.jupiter.api.Test;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
+/**
+ * @author Hendrik Steinmetz
+ */
 public class RecipeNodeLocatorTest {
 
   private static final ObjectMapper mapper = ObjectMapperFactory.getInstance().getObjectMapper();

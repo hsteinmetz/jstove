@@ -11,6 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.ObjectMapper;
 
+/**
+ * @author Hendrik Steinmetz
+ */
 class InstructionNormalizerTest {
 
   private static ParseIssueHandler parseIssueHandler;

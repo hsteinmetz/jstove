@@ -2,6 +2,9 @@ package com.hsteinmetz.jstove.model;
 
 import java.util.Map;
 
+/**
+ * @author Hendrik Steinmetz
+ */
 public record NutritionInfo(
     String calories,
     String fatContent,

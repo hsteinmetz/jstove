@@ -7,6 +7,9 @@ import java.time.Duration;
 import java.util.Optional;
 import tools.jackson.databind.JsonNode;
 
+/**
+ * @author Hendrik Steinmetz
+ */
 public class DurationNormalizer extends GenericNormalizer<Duration> {
 
   public DurationNormalizer(FieldReader fieldReader) {

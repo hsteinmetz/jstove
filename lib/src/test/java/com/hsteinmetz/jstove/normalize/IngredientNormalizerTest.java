@@ -12,6 +12,9 @@ import org.junit.jupiter.api.Test;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.JsonNodeFactory;
 
+/**
+ * @author Hendrik Steinmetz
+ */
 class IngredientNormalizerTest {
 
   private static ParseIssueHandler parseIssueHandler;

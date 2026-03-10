@@ -14,6 +14,7 @@ import tools.jackson.databind.JsonNode;
  * @param recipe the parsed recipe
  * @param warnings a list of warnings generated during parsing
  * @param unparsedFields a map of unparsed fields encountered in the input JSON
+ * @author Hendrik Steinmetz
  */
 public record ParseResult(
     Recipe recipe, List<ParseWarning> warnings, Map<String, JsonNode> unparsedFields) {

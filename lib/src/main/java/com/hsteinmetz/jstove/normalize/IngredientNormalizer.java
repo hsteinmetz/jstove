@@ -41,6 +41,7 @@ import tools.jackson.databind.ObjectMapper;
  *
  * @see <a href="https://schema.org/recipeIngredient">https://schema.org/recipeIngredient</a>
  * @see <a href="https://schema.org/ItemList">https://schema.org/ItemList</a>
+ * @author Hendrik Steinmetz
  */
 public class IngredientNormalizer extends GenericNormalizer<List<Ingredient>> {
 

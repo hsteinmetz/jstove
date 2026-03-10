@@ -12,6 +12,9 @@ import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.JsonNodeFactory;
 
+/**
+ * @author Hendrik Steinmetz
+ */
 class AuthorNormalizerTest {
 
   private static final AuthorNormalizer normalizer = new AuthorNormalizer(new FieldReader());

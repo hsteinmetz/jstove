@@ -24,6 +24,8 @@ import tools.jackson.databind.ObjectMapper;
  * configuring the parsing process, {@link RecipeNodeLocator} and {@link RecipeNodeSelector} for
  * locating and selecting nodes in the JSON structure, and {@link RecipeNormalizer} for normalizing
  * the parsed recipe.
+ *
+ * @author Hendrik Steinmetz
  */
 public final class DefaultRecipeParser implements RecipeParser {
 

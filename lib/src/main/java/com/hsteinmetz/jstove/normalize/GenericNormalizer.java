@@ -5,6 +5,9 @@ import com.hsteinmetz.jstove.internal.ParseIssueHandler;
 import java.util.Optional;
 import tools.jackson.databind.JsonNode;
 
+/**
+ * @author Hendrik Steinmetz
+ */
 public abstract class GenericNormalizer<T> {
 
   protected final FieldReader reader;

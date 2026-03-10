@@ -1,5 +1,8 @@
 package com.hsteinmetz.jstove.api.except;
 
+/**
+ * @author Hendrik Steinmetz
+ */
 public enum RecipeParseErrorCode {
   NO_RECIPE_NODE,
   MULTIPLE_RECIPE_NODES,

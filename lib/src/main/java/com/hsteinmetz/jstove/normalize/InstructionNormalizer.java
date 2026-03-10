@@ -14,6 +14,8 @@ import tools.jackson.databind.JsonNode;
 /**
  * Provides normalization logic for the instruction data in a recipe. For further details, see
  * {@link InstructionNormalizer#normalize(JsonNode, ParseIssueHandler)}
+ *
+ * @author Hendrik Steinmetz
  */
 public class InstructionNormalizer extends GenericNormalizer<List<InstructionSection>> {
 

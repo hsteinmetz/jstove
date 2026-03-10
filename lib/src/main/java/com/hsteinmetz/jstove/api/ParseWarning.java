@@ -13,6 +13,7 @@ import tools.jackson.core.JsonPointer;
  * @param field the name of the field that caused the warning, if applicable
  * @param message a human-readable message describing the warning
  * @param points a JSON pointer indicating the location in the input JSON where the warning occurred
+ * @author Hendrik Steinmetz
  */
 public record ParseWarning(
     RecipeParseErrorCode code, String field, String message, JsonPointer points) {
