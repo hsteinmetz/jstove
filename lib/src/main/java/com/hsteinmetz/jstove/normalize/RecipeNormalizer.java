@@ -19,6 +19,14 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
     return Recipe.empty();
   }
 
+  /**
+   * Normalizes a JSON node representing a recipe into a {@link Recipe} object.
+   *
+   * @param recipeNode the JSON node to normalize
+   * @param parseIssueHandler the handler for parsing issues that may arise during normalization
+   * @return an Optional containing the normalized Recipe, or an empty Optional if normalization
+   *     fails
+   */
   public Optional<Recipe> normalize(JsonNode recipeNode, ParseIssueHandler parseIssueHandler) {
     if (recipeNode == null || recipeNode.isNull() || recipeNode.isMissingNode()) {
       parseIssueHandler.warnOrThrow(

@@ -11,12 +11,28 @@ import java.util.Map;
 import java.util.Optional;
 import tools.jackson.databind.JsonNode;
 
+/**
+ * Provides normalization logic for the instruction data in a recipe. For further details, see
+ * {@link InstructionNormalizer#normalize(JsonNode, ParseIssueHandler)}
+ */
 public class InstructionNormalizer extends GenericNormalizer<List<InstructionSection>> {
 
   public InstructionNormalizer(FieldReader fieldReader) {
     super(fieldReader);
   }
 
+  /**
+   * Normalizes the instruction data from the given JSON node. The method handles various input
+   * formats for instructions, including strings, arrays of strings, and structured objects
+   * representing sections and steps. It produces a list of {@link InstructionSection} objects that
+   * represent the normalized instructions. All errors and warnings encountered during normalization
+   * are reported through the provided {@link ParseIssueHandler}.
+   *
+   * @param input the JSON node containing the instruction data to normalize
+   * @param parseIssueHandler the handler for reporting any issues encountered during normalization
+   * @return an {@link Optional} containing the list of normalized instruction sections, an empty
+   *     {@link Optional} if no valid instructions were found or errors were encountered
+   */
   @Override
   public Optional<List<InstructionSection>> normalize(
       JsonNode input, ParseIssueHandler parseIssueHandler) {
