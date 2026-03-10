@@ -48,9 +48,24 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
             .normalize(reader.read(recipeNode, "author").orElse(null), parseIssueHandler)
             .orElse(List.of());
 
-    Duration prep = Duration.ZERO;
-    Duration cook = Duration.ZERO;
-    Duration total = Duration.ZERO;
+    DurationNormalizer durationNormalizer = new DurationNormalizer(reader);
+    Duration prep =
+        durationNormalizer
+            .normalize(recipeNode.get("prepTime"), parseIssueHandler)
+            .orElse(Duration.ZERO);
+    Duration cook =
+        durationNormalizer
+            .normalize(recipeNode.get("cookTime"), parseIssueHandler)
+            .orElse(Duration.ZERO);
+    Duration total =
+        durationNormalizer
+            .normalize(recipeNode.get("totalTime"), parseIssueHandler)
+            .orElse(Duration.ZERO);
+
+    if (total.equals(Duration.ZERO)) {
+      total = prep.plus(cook);
+    }
+
     TimeInfo timeInfo = new TimeInfo(prep, cook, total);
 
     NutritionInfo nutritionInfo = new NutritionInfo(null, null, null, null, null);

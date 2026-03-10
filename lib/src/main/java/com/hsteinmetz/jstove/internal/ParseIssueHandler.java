@@ -27,6 +27,10 @@ public final class ParseIssueHandler {
     }
   }
 
+  public void clear() {
+    warnings.clear();
+  }
+
   private void addWarning(
       RecipeParseErrorCode code, String field, String message, JsonPointer pointer) {
     warnings.add(

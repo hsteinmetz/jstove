@@ -6,6 +6,7 @@ import com.hsteinmetz.jstove.internal.ParseIssueHandler;
 import com.hsteinmetz.jstove.jackson.ObjectMapperFactory;
 import com.hsteinmetz.jstove.model.AuthorInfo;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
@@ -17,6 +18,11 @@ class AuthorNormalizerTest {
   private static final ObjectMapper mapper = ObjectMapperFactory.getInstance().getObjectMapper();
   private static final ParseIssueHandler PARSE_ISSUE_HANDLER =
       new ParseIssueHandler(ParseOptions.defaultOptions());
+
+  @BeforeEach
+  void clearParseIssues() {
+    PARSE_ISSUE_HANDLER.clear();
+  }
 
   @Test
   void testAuthorNormalizeReturnsEmptyOnNull() {

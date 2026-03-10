@@ -7,6 +7,7 @@ import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.ParseIssueHandler;
 import com.hsteinmetz.jstove.jackson.ObjectMapperFactory;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.JsonNodeFactory;
@@ -22,6 +23,11 @@ class IngredientNormalizerTest {
     parseIssueHandler = new ParseIssueHandler(ParseOptions.defaultOptions());
     ingredientNormalizer = new IngredientNormalizer(new FieldReader());
     objectMapper = ObjectMapperFactory.getInstance().getObjectMapper();
+  }
+
+  @BeforeEach
+  void clearParseIssues() {
+    parseIssueHandler.clear();
   }
 
   @Test
