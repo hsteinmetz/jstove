@@ -52,7 +52,11 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
         new IngredientNormalizer(this.reader)
             .normalize(reader.read(recipeNode, "recipeIngredient").orElse(null), parseIssueHandler)
             .orElse(List.of());
-    List<InstructionBlock> instructions = List.of();
+    List<InstructionSection> instructions =
+        new InstructionNormalizer(this.reader)
+            .normalize(
+                reader.read(recipeNode, "recipeInstructions").orElse(null), parseIssueHandler)
+            .orElse(List.of());
     List<MediaRef> images = List.of();
     List<AuthorInfo> authors =
         new AuthorNormalizer(reader)
@@ -79,7 +83,10 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
 
     TimeInfo timeInfo = new TimeInfo(prep, cook, total);
 
-    NutritionInfo nutritionInfo = new NutritionInfo(null, null, null, null, null);
+    NutritionInfo nutritionInfo =
+        new NutritionNormalizer(this.reader)
+            .normalize(recipeNode.get("nutrition"), parseIssueHandler)
+            .orElse(null);
 
     SourceMetadata sourceMetadata =
         new SourceMetadata(

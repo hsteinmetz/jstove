@@ -26,15 +26,15 @@ public class InstructionNormalizer extends GenericNormalizer<List<InstructionSec
 
   /**
    * Normalizes the instruction data from the given JSON node. The method handles various input
-   * formats for instructions, including strings, arrays of strings, and structured objects
+   * formats for instructionSections, including strings, arrays of strings, and structured objects
    * representing sections and steps. It produces a list of {@link InstructionSection} objects that
-   * represent the normalized instructions. All errors and warnings encountered during normalization
-   * are reported through the provided {@link ParseIssueHandler}.
+   * represent the normalized instructionSections. All errors and warnings encountered during
+   * normalization are reported through the provided {@link ParseIssueHandler}.
    *
    * @param input the JSON node containing the instruction data to normalize
    * @param parseIssueHandler the handler for reporting any issues encountered during normalization
    * @return an {@link Optional} containing the list of normalized instruction sections, an empty
-   *     {@link Optional} if no valid instructions were found or errors were encountered
+   *     {@link Optional} if no valid instructionSections were found or errors were encountered
    */
   @Override
   public Optional<List<InstructionSection>> normalize(
@@ -97,6 +97,12 @@ public class InstructionNormalizer extends GenericNormalizer<List<InstructionSec
         }
 
         return Optional.of(sections);
+      } else {
+        parseIssueHandler.warnOrThrow(
+            RecipeParseErrorCode.FIELD_UNSUPPORTED_SHAPE,
+            input.toString(),
+            "Instruction array contains items that are not all strings or all objects",
+            null);
       }
     } else {
       parseIssueHandler.warnOrThrow(

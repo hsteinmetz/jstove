@@ -27,13 +27,30 @@ public class RecipeParsers {
    *
    * @return a default {@link RecipeParser} instance with lenient parsing options
    */
-  public static RecipeParser defaultParser() {
+  public static RecipeParser defaultLenientParser() {
     ParseOptions options =
         new ParseOptions(
-            ParseMode.STRICT,
+            ParseMode.LENIENT,
             true, // allowUnknownFields
             true, // allowMissingFields
             true // allowExtraFields
+            );
+
+    return new DefaultRecipeParser(
+        new JsonReader(),
+        options,
+        new com.hsteinmetz.jstove.normalize.RecipeNodeLocator(),
+        new com.hsteinmetz.jstove.normalize.RecipeNodeSelector(),
+        new com.hsteinmetz.jstove.normalize.RecipeNormalizer(new FieldReader()));
+  }
+
+  public static RecipeParser defaultStrictParser() {
+    ParseOptions options =
+        new ParseOptions(
+            ParseMode.STRICT,
+            false, // allowUnknownFields
+            false, // allowMissingFields
+            false // allowExtraFields
             );
 
     return new DefaultRecipeParser(

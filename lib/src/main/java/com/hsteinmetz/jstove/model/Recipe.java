@@ -9,7 +9,7 @@ public record Recipe(
     String title,
     String description,
     List<Ingredient> ingredients,
-    List<InstructionBlock> instructions,
+    List<InstructionSection> instructionSections,
     TimeInfo time,
     String yield,
     NutritionInfo nutrition,
