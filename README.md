@@ -19,14 +19,22 @@ String json = "..."; // Or InputStream, Reader, etc.
 var parser = RecipeParsers.defaultLenientParser();
 ParseResult result = parser.parse(json);
 
-if(result.hasWarnings()) {
-    // Handle warnings
-}
+if(result.
+
+hasWarnings()){
+        // Handle warnings
+        }
 
 Recipe recipe = result.recipe();
-System.out.println("Recipe Name: " + recipe.name());
-System.out.println("Ingredients: " + recipe.ingredients());
-System.out.println("Instructions: " + recipe.instructions());
+System.out.
+
+println("Recipe Name: "+recipe.name());
+        System.out.
+
+println("Ingredients: "+recipe.ingredients());
+        System.out.
+
+println("Instructions: "+recipe.instructions());
 ```
 
 ## Installation
@@ -37,6 +45,8 @@ TODO
 
 Contributions are currently not accepted as the project is in early development. However, if you have suggestions or
 want to contribute in the future, please feel free to reach out.
+
+Development takes place in the `develop` branch.
 
 ## License
 
