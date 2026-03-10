@@ -45,7 +45,6 @@ class RecipeNormalizerTest {
                 "1 cup chocolate chips"
               ],
               "recipeInstructions": [
-                "abc",
                 {
                   "@type": "HowToStep",
                   "text": "Preheat oven to 350 degrees F (175 degrees C)."
@@ -122,7 +121,4 @@ class RecipeNormalizerTest {
     assertEquals(1, recipe.authors().size());
     assertEquals("Jane Doe", recipe.authors().getFirst().name());
   }
-
-  @Test
-  void testRecipeParser() {}
 }

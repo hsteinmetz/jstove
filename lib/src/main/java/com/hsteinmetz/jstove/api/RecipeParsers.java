@@ -30,10 +30,7 @@ public class RecipeParsers {
   public static RecipeParser defaultLenientParser() {
     ParseOptions options =
         new ParseOptions(
-            ParseMode.LENIENT,
-            true, // allowUnknownFields
-            true, // allowMissingFields
-            true // allowExtraFields
+            ParseMode.LENIENT, true // allowUnknownFields
             );
 
     return new DefaultRecipeParser(
@@ -47,10 +44,7 @@ public class RecipeParsers {
   public static RecipeParser defaultStrictParser() {
     ParseOptions options =
         new ParseOptions(
-            ParseMode.STRICT,
-            false, // allowUnknownFields
-            false, // allowMissingFields
-            false // allowExtraFields
+            ParseMode.STRICT, false // allowUnknownFields
             );
 
     return new DefaultRecipeParser(
