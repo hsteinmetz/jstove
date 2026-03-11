@@ -2,7 +2,10 @@ package com.hsteinmetz.jstove.api;
 
 import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.extract.JsonReader;
+import com.hsteinmetz.jstove.extract.RecipeNodeLocator;
+import com.hsteinmetz.jstove.extract.RecipeNodeSelector;
 import com.hsteinmetz.jstove.internal.DefaultRecipeParser;
+import com.hsteinmetz.jstove.internal.DefaultRecipeScorer;
 
 /**
  * Factory class for creating instances of {@link RecipeParser}. This class provides methods to
@@ -36,8 +39,8 @@ public class RecipeParsers {
     return new DefaultRecipeParser(
         new JsonReader(),
         options,
-        new com.hsteinmetz.jstove.normalize.RecipeNodeLocator(),
-        new com.hsteinmetz.jstove.normalize.RecipeNodeSelector(),
+        new RecipeNodeLocator(),
+        new RecipeNodeSelector(new DefaultRecipeScorer()),
         new com.hsteinmetz.jstove.normalize.RecipeNormalizer(new FieldReader()));
   }
 
@@ -50,8 +53,8 @@ public class RecipeParsers {
     return new DefaultRecipeParser(
         new JsonReader(),
         options,
-        new com.hsteinmetz.jstove.normalize.RecipeNodeLocator(),
-        new com.hsteinmetz.jstove.normalize.RecipeNodeSelector(),
+        new RecipeNodeLocator(),
+        new RecipeNodeSelector(new DefaultRecipeScorer()),
         new com.hsteinmetz.jstove.normalize.RecipeNormalizer(new FieldReader()));
   }
 }

@@ -1,6 +1,5 @@
-package com.hsteinmetz.jstove.normalize;
+package com.hsteinmetz.jstove.extract;
 
-import com.hsteinmetz.jstove.extract.JsonReader;
 import com.hsteinmetz.jstove.jackson.ObjectMapperFactory;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +19,7 @@ public class RecipeNodeLocatorTest {
   @Test
   public void testLocate() throws IOException {
     RecipeNodeLocator locator = new RecipeNodeLocator();
-    InputStream is = getClass().getResourceAsStream("/recipes.json");
+    InputStream is = getClass().getResourceAsStream("/fixtures/synthetic/recipes.json");
     JsonReader input = new JsonReader();
     JsonNode root = input.parse(is);
 

@@ -1,4 +1,4 @@
-package com.hsteinmetz.jstove.normalize;
+package com.hsteinmetz.jstove.extract;
 
 import java.util.ArrayList;
 import java.util.List;
