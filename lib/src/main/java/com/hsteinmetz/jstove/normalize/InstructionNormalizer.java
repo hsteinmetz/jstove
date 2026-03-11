@@ -5,12 +5,13 @@ import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.ParseIssueHandler;
 import com.hsteinmetz.jstove.model.InstructionSection;
 import com.hsteinmetz.jstove.model.InstructionStep;
-import com.hsteinmetz.jstove.normalize.util.NormalizationUtils;
+import com.hsteinmetz.jstove.normalize.util.NodeShape;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
 
 /**
  * Provides normalization logic for the instruction data in a recipe. For further details, see
@@ -39,80 +40,82 @@ public class InstructionNormalizer extends GenericNormalizer<List<InstructionSec
   @Override
   public Optional<List<InstructionSection>> normalize(
       JsonNode input, ParseIssueHandler parseIssueHandler) {
-    var sections = new ArrayList<InstructionSection>();
+    if (isBlank(input)) return Optional.empty();
 
-    if (NormalizationUtils.isNullOrEmptyNode(input)) return Optional.empty();
-
-    if (input.isString()) {
-      var instructions = new InstructionStep(input.asString(), 0, null, Map.of());
-      var section = InstructionSection.of(List.of(instructions), 0);
-      return Optional.of(List.of(section));
-    } else if (input.isArray()) {
-      input = input.asArray();
-      if (input.isEmpty()) {
-        parseIssueHandler.warnOrThrow(
-            RecipeParseErrorCode.EMPTY_INSTRUCTION_LIST,
-            "@root",
-            "Instruction array is empty",
-            null);
-        return Optional.empty();
+    return switch (NodeShape.of(input)) {
+      case STRING -> {
+        var instructions = new InstructionStep(input.asString(), 0, null, Map.of());
+        var section = InstructionSection.of(List.of(instructions), 0);
+        yield Optional.of(List.of(section));
       }
+      case ARRAY -> parseArray(input.asArray(), parseIssueHandler);
+      default ->
+          fail(
+              parseIssueHandler,
+              RecipeParseErrorCode.FIELD_UNSUPPORTED_SHAPE,
+              input.toString(),
+              "Instruction node is not a string or an array");
+    };
+  }
 
-      // Case 1: Array of strings
-      if (input.valueStream().allMatch(JsonNode::isString)) {
-        var result = new ArrayList<InstructionStep>();
-        for (int i = 0; i < input.size(); i++) {
-          result.add(new InstructionStep(input.get(i).asString(), i, null, Map.of()));
-        }
+  private Optional<List<InstructionSection>> parseArray(
+      ArrayNode input, ParseIssueHandler parseIssueHandler) {
+    List<InstructionSection> sections = new ArrayList<>();
 
-        var section = InstructionSection.of(result, 0);
-        return Optional.of(List.of(section));
-      } else if (input.valueStream().allMatch(JsonNode::isObject)) {
-        var stepBuffer = new ArrayList<InstructionStep>();
-        // Case 2: Array with HowToSections and HowToSteps
-        for (int i = 0; i < input.size(); i++) {
-          var item = input.get(i);
-
-          if (isHowToSection(item)) {
-            if (!stepBuffer.isEmpty()) {
-              var newSection = InstructionSection.of(new ArrayList<>(stepBuffer), sections.size());
-              sections.add(newSection);
-              stepBuffer.clear();
-            }
-
-            sections.add(normalizeSection(item, sections.size(), parseIssueHandler));
-          } else if (isHowToStep(item)) {
-            stepBuffer.add(normalizeStep(item, stepBuffer.size(), parseIssueHandler));
-          } else {
-            parseIssueHandler.warnOrThrow(
-                RecipeParseErrorCode.FIELD_UNSUPPORTED_SHAPE,
-                item.toString(),
-                "Instruction array contains an item that is neither a HowToSection nor a HowToStep",
-                null);
-          }
-        }
-
-        if (!stepBuffer.isEmpty()) {
-          sections.add(InstructionSection.of(new ArrayList<>(stepBuffer), sections.size()));
-        }
-
-        return Optional.of(sections);
-      } else {
-        parseIssueHandler.warnOrThrow(
-            RecipeParseErrorCode.FIELD_UNSUPPORTED_SHAPE,
-            input.toString(),
-            "Instruction array contains items that are not all strings or all objects",
-            null);
-      }
-    } else {
-      parseIssueHandler.warnOrThrow(
-          RecipeParseErrorCode.FIELD_UNSUPPORTED_SHAPE,
-          input.toString(),
-          "Instruction node is not a string or an array",
-          null);
+    if (input.isEmpty()) {
+      return fail(
+          parseIssueHandler,
+          RecipeParseErrorCode.EMPTY_INSTRUCTION_LIST,
+          "@root",
+          "Instruction array is empty");
     }
 
-    return Optional.empty();
+    // Case 1: Array of strings
+    if (input.valueStream().allMatch(JsonNode::isString)) {
+      var result = new ArrayList<InstructionStep>();
+      for (int i = 0; i < input.size(); i++) {
+        result.add(new InstructionStep(input.get(i).asString(), i, null, Map.of()));
+      }
+
+      var section = InstructionSection.of(result, 0);
+      return Optional.of(List.of(section));
+    } else if (input.valueStream().allMatch(JsonNode::isObject)) {
+      var stepBuffer = new ArrayList<InstructionStep>();
+      // Case 2: Array with HowToSections and HowToSteps
+      for (int i = 0; i < input.size(); i++) {
+        var item = input.get(i);
+
+        if (isHowToSection(item)) {
+          if (!stepBuffer.isEmpty()) {
+            var newSection = InstructionSection.of(new ArrayList<>(stepBuffer), sections.size());
+            sections.add(newSection);
+            stepBuffer.clear();
+          }
+
+          sections.add(normalizeSection(item, sections.size(), parseIssueHandler));
+        } else if (isHowToStep(item)) {
+          stepBuffer.add(normalizeStep(item, stepBuffer.size(), parseIssueHandler));
+        } else {
+          parseIssueHandler.warnOrThrow(
+              RecipeParseErrorCode.FIELD_UNSUPPORTED_SHAPE,
+              item.toString(),
+              "Instruction array contains an item that is neither a HowToSection nor a HowToStep",
+              null);
+        }
+      }
+
+      if (!stepBuffer.isEmpty()) {
+        sections.add(InstructionSection.of(new ArrayList<>(stepBuffer), sections.size()));
+      }
+
+      return Optional.of(sections);
+    }
+
+    return fail(
+        parseIssueHandler,
+        RecipeParseErrorCode.FIELD_UNSUPPORTED_SHAPE,
+        input.toString(),
+        "Instruction array contains items that are not all strings or all objects");
   }
 
   private InstructionStep normalizeStep(

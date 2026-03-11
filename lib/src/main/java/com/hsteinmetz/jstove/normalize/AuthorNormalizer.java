@@ -4,7 +4,7 @@ import com.hsteinmetz.jstove.api.except.RecipeParseErrorCode;
 import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.ParseIssueHandler;
 import com.hsteinmetz.jstove.model.AuthorInfo;
-import com.hsteinmetz.jstove.normalize.util.NormalizationUtils;
+import com.hsteinmetz.jstove.normalize.util.NodeShape;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,45 +22,49 @@ public class AuthorNormalizer extends GenericNormalizer<List<AuthorInfo>> {
 
   public Optional<List<AuthorInfo>> normalize(
       JsonNode authorNode, ParseIssueHandler parseIssueHandler) {
-    if (NormalizationUtils.isNullOrEmptyNode(authorNode)) return Optional.empty();
+    if (isBlank(authorNode)) return Optional.empty();
 
-    if (authorNode.isArray()) {
-      List<AuthorInfo> authors = new ArrayList<>();
-      for (JsonNode author : authorNode) {
-        if (author.isObject()) {
-          authors.add(constructFromObject(author));
-        } else if (author.isString()) {
-          authors.add(new AuthorInfo(author.asString(), null, null));
-        } else {
-          parseIssueHandler.warnOrThrow(
+    return switch (NodeShape.of(authorNode)) {
+      case ARRAY -> normalizeArray(authorNode, parseIssueHandler);
+      case OBJECT -> {
+        AuthorInfo info = constructFromObject(authorNode);
+        yield Optional.of(List.of(info));
+      }
+      case STRING -> {
+        AuthorInfo info = new AuthorInfo(authorNode.asString(), null, null);
+        yield Optional.of(List.of(info));
+      }
+      default ->
+          fail(
+              parseIssueHandler,
               RecipeParseErrorCode.FIELD_UNSUPPORTED_SHAPE,
               "author",
-              "Unsupported shape for author field; expected object, string or array",
-              JsonPointer.compile("/author"));
-        }
-      }
-      return Optional.of(authors);
-    } else if (authorNode.isObject()) {
-      AuthorInfo author = constructFromObject(authorNode);
-      return Optional.of(List.of(author));
-    } else if (authorNode.isString()) {
-      AuthorInfo author = new AuthorInfo(authorNode.asString(), null, null);
-      return Optional.of(List.of(author));
-    } else {
-      parseIssueHandler.warnOrThrow(
-          RecipeParseErrorCode.FIELD_UNSUPPORTED_SHAPE,
-          "author",
-          "Unsupported shape for author field; expected object, string or array",
-          JsonPointer.compile("/author"));
-    }
+              "Unsupported shape for author field; expected object, string or array");
+    };
+  }
 
-    return Optional.empty();
+  private Optional<List<AuthorInfo>> normalizeArray(
+      JsonNode authorNode, ParseIssueHandler parseIssueHandler) {
+    List<AuthorInfo> authors = new ArrayList<>();
+    for (JsonNode author : authorNode) {
+      switch (NodeShape.of(author)) {
+        case OBJECT -> authors.add(constructFromObject(author));
+        case STRING -> authors.add(new AuthorInfo(author.asString(), null, null));
+        default ->
+            parseIssueHandler.warnOrThrow(
+                RecipeParseErrorCode.FIELD_UNSUPPORTED_SHAPE,
+                "author",
+                "Unsupported shape for author field; expected object, string or array",
+                JsonPointer.compile("/author"));
+      }
+    }
+    return Optional.of(authors);
   }
 
   private AuthorInfo constructFromObject(JsonNode authorNode) {
-    String name = reader.readAsText(authorNode, "name").orElse(null);
-    String url = reader.readAsText(authorNode, "url").orElse(null);
-    String email = reader.readAsText(authorNode, "email").orElse(null);
+    String name = text(authorNode, "name").orElse(null);
+    String url = text(authorNode, "url").orElse(null);
+    String email = text(authorNode, "email").orElse(null);
 
     return new AuthorInfo(name, email, url);
   }

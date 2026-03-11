@@ -31,13 +31,12 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
    *     fails
    */
   public Optional<Recipe> normalize(JsonNode recipeNode, ParseIssueHandler parseIssueHandler) {
-    if (recipeNode == null || recipeNode.isNull() || recipeNode.isMissingNode()) {
-      parseIssueHandler.warnOrThrow(
+    if (isBlank(recipeNode)) {
+      return fail(
+          parseIssueHandler,
           RecipeParseErrorCode.NO_RECIPE_NODE,
           "@root",
-          "No recipe node found; using empty recipe",
-          null);
-      return Optional.of(emptyRecipe());
+          "No recipe node found; using empty recipe");
     }
     String title = reader.readFirstText(recipeNode, "name", "headline", "title").orElse(null);
     String description = reader.readAsText(recipeNode, "description").orElse(null);
@@ -47,7 +46,6 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
     List<String> categories = reader.readStringList(recipeNode, "recipeCategory");
     List<String> cuisines = reader.readStringList(recipeNode, "recipeCuisine");
 
-    // TODO
     List<Ingredient> ingredients =
         new IngredientNormalizer(this.reader)
             .normalize(reader.read(recipeNode, "recipeIngredient").orElse(null), parseIssueHandler)

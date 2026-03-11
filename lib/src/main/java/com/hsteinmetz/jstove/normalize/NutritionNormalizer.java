@@ -3,7 +3,6 @@ package com.hsteinmetz.jstove.normalize;
 import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.ParseIssueHandler;
 import com.hsteinmetz.jstove.model.NutritionInfo;
-import com.hsteinmetz.jstove.normalize.util.NormalizationUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,7 +19,7 @@ public class NutritionNormalizer extends GenericNormalizer<NutritionInfo> {
 
   @Override
   public Optional<NutritionInfo> normalize(JsonNode input, ParseIssueHandler parseIssueHandler) {
-    if (NormalizationUtils.isNullOrEmptyNode(input)) return Optional.empty();
+    if (isBlank(input)) return Optional.empty();
 
     var calories = reader.readAsText(input, "calories").orElse(null);
     var fatContent = reader.readAsText(input, "fatContent").orElse(null);
