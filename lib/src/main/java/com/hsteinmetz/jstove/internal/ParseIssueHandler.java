@@ -10,6 +10,11 @@ import java.util.List;
 import tools.jackson.core.JsonPointer;
 
 /**
+ * Handles parsing issues by either throwing exceptions or collecting warnings based on the
+ * configured {@link ParseOptions}. This class provides methods like {@link
+ * ParseIssueHandler#warnOrThrow(RecipeParseErrorCode, String, String, JsonPointer)} to report
+ * parsing issues and manage the collected warnings.
+ *
  * @author Hendrik Steinmetz
  */
 public final class ParseIssueHandler {
