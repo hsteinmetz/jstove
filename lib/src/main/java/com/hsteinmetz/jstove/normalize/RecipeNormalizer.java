@@ -55,7 +55,10 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
             .normalize(
                 reader.read(recipeNode, "recipeInstructions").orElse(null), parseIssueHandler)
             .orElse(List.of());
-    List<MediaRef> images = List.of();
+    List<MediaRef> images =
+        new ImageNormalizer(this.reader)
+            .normalize(reader.read(recipeNode, "image").orElse(null), parseIssueHandler)
+            .orElse(List.of());
     List<AuthorInfo> authors =
         new AuthorNormalizer(reader)
             .normalize(reader.read(recipeNode, "author").orElse(null), parseIssueHandler)
