@@ -35,7 +35,6 @@ class IngredientNormalizerTest {
 
   @Test
   void testNormalizeNullInput() {
-    assertTrue(ingredientNormalizer.normalize(null, parseIssueHandler).isEmpty());
     assertTrue(
         ingredientNormalizer
             .normalize(JsonNodeFactory.instance.nullNode(), parseIssueHandler)
@@ -68,7 +67,7 @@ class IngredientNormalizerTest {
         """
         {
           "@type": "ItemList",
-          "itemListElement": [
+          "http://schema.org/itemListElement": [
             "1 cup flour",
             "2 eggs",
             "1/2 cup sugar"

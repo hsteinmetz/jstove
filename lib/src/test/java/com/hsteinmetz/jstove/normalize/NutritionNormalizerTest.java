@@ -34,7 +34,6 @@ class NutritionNormalizerTest {
 
   @Test
   void testNormalizeNullInput() {
-    assertTrue(nutritionNormalizer.normalize(null, parseIssueHandler).isEmpty());
     assertTrue(
         nutritionNormalizer
             .normalize(
@@ -44,7 +43,6 @@ class NutritionNormalizerTest {
 
   @Test
   void testNormalizeEmptyObject() {
-    assertTrue(nutritionNormalizer.normalize(null, parseIssueHandler).isEmpty());
     assertTrue(
         nutritionNormalizer
             .normalize(

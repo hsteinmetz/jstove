@@ -29,7 +29,6 @@ class DurationNormalizerTest {
 
   @Test
   void testNormalizeNullInput() {
-    assertTrue(normalizer.normalize(null, parseIssueHandler).isEmpty());
     assertTrue(
         normalizer
             .normalize(

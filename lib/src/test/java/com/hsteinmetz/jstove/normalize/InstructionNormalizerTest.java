@@ -34,7 +34,6 @@ class InstructionNormalizerTest {
 
   @Test
   void testNormalizeNullInput() {
-    assertTrue(instructionNormalizer.normalize(null, parseIssueHandler).isEmpty());
     assertTrue(
         instructionNormalizer
             .normalize(

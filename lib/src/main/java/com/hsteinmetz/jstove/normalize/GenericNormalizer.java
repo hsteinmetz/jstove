@@ -36,4 +36,12 @@ public abstract class GenericNormalizer<T> {
   }
 
   public abstract Optional<T> normalize(JsonNode input, ParseIssueHandler parseIssueHandler);
+
+  public Optional<T> normalize(Optional<JsonNode> input, ParseIssueHandler parseIssueHandler) {
+    if (input.isEmpty()) {
+      return Optional.empty();
+    }
+
+    return normalize(input.get(), parseIssueHandler);
+  }
 }

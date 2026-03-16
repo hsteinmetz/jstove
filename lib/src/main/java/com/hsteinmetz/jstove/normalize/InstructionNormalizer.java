@@ -5,13 +5,13 @@ import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.ParseIssueHandler;
 import com.hsteinmetz.jstove.model.InstructionSection;
 import com.hsteinmetz.jstove.model.InstructionStep;
-import com.hsteinmetz.jstove.normalize.util.NodeShape;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.JsonNodeType;
 
 /**
  * Provides normalization logic for the instruction data in a recipe. For further details, see
@@ -42,7 +42,7 @@ public class InstructionNormalizer extends GenericNormalizer<List<InstructionSec
       JsonNode input, ParseIssueHandler parseIssueHandler) {
     if (isBlank(input)) return Optional.empty();
 
-    return switch (NodeShape.of(input)) {
+    return switch (input.getNodeType()) {
       case STRING -> {
         var instructions = new InstructionStep(input.asString(), 0, null, Map.of());
         var section = InstructionSection.of(List.of(instructions), 0);
@@ -130,8 +130,8 @@ public class InstructionNormalizer extends GenericNormalizer<List<InstructionSec
     String name = reader.readAsText(sectionNode, "name").orElse(null);
     List<InstructionStep> steps = new ArrayList<>();
 
-    if (sectionNode.has("itemListElement") && sectionNode.get("itemListElement").isArray()) {
-      var ile = sectionNode.get("itemListElement");
+    if (reader.isOfType(sectionNode, "itemListElement", JsonNodeType.ARRAY)) {
+      var ile = reader.readAsList(sectionNode, "itemListElement");
       for (int i = 0; i < ile.size(); i++) {
         var step = (normalizeStep(ile.get(i), i, parseIssueHandler));
         steps.add(step);
@@ -142,10 +142,12 @@ public class InstructionNormalizer extends GenericNormalizer<List<InstructionSec
   }
 
   private boolean isHowToSection(JsonNode node) {
-    return node.has("@type") && node.get("@type").asString().equalsIgnoreCase("howtosection");
+    return reader.has(node, "@type")
+        && reader.readAsText(node, "@type").orElse("").equalsIgnoreCase("howtosection");
   }
 
   private boolean isHowToStep(JsonNode node) {
-    return node.has("@type") && node.get("@type").asString().equalsIgnoreCase("howtostep");
+    return reader.has(node, "@type")
+        && reader.readAsText(node, "@type").orElse("").equalsIgnoreCase("howtostep");
   }
 }

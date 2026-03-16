@@ -108,15 +108,15 @@ public class IngredientNormalizer extends GenericNormalizer<List<Ingredient>> {
       return Optional.empty();
     }
 
-    var itemListElement = input.get("itemListElement");
-    if (itemListElement == null) {
+    var itemListElement = reader.read(input, "itemListElement");
+    if (itemListElement.isEmpty()) {
       parseIssueHandler.warnOrThrow(
           RecipeParseErrorCode.EMPTY_INGREDIENT_LIST,
           "recipeIngredient",
           "Missing itemListElement field for recipeIngredient object with @type ItemList",
           null);
       return Optional.empty();
-    } else if (!itemListElement.isArray()) {
+    } else if (!itemListElement.get().isArray()) {
       parseIssueHandler.warnOrThrow(
           RecipeParseErrorCode.FIELD_UNSUPPORTED_SHAPE,
           "recipeIngredient",
@@ -125,9 +125,9 @@ public class IngredientNormalizer extends GenericNormalizer<List<Ingredient>> {
       return Optional.empty();
     }
 
-    itemListElement = itemListElement.asArray();
+    var arrayNode = itemListElement.get().asArray();
 
-    if (itemListElement.isEmpty()) {
+    if (arrayNode.isEmpty()) {
       parseIssueHandler.warnOrThrow(
           RecipeParseErrorCode.EMPTY_INGREDIENT_LIST,
           "recipeIngredient",
@@ -136,7 +136,7 @@ public class IngredientNormalizer extends GenericNormalizer<List<Ingredient>> {
       return Optional.empty();
     }
 
-    for (JsonNode item : itemListElement) {
+    for (JsonNode item : arrayNode) {
       if (item.isString()) {
         ingredients.add(new Ingredient(item.asString(), null));
       } else {

@@ -16,7 +16,8 @@ class AuthorNormalizerTest extends GenericNormalizerTest {
 
   @Test
   void testAuthorNormalizeReturnsEmptyOnNull() {
-    Assertions.assertTrue(normalizer.normalize(null, PARSE_ISSUE_HANDLER).isEmpty());
+    Assertions.assertTrue(
+        normalizer.normalize(JsonNodeFactory.instance.nullNode(), PARSE_ISSUE_HANDLER).isEmpty());
   }
 
   @Test
