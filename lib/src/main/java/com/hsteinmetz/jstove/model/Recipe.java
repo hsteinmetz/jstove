@@ -1,38 +1,42 @@
 package com.hsteinmetz.jstove.model;
 
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Hendrik Steinmetz
  */
-public record Recipe(
-    String title,
-    String description,
-    List<Ingredient> ingredients,
-    List<InstructionSection> instructionSections,
-    TimeInfo time,
-    String yield,
-    NutritionInfo nutrition,
-    List<String> categories,
-    List<String> cuisines,
-    List<MediaRef> images,
-    List<AuthorInfo> authors,
-    String sourceUrl,
-    SourceMetadata sourceMetadata) {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Recipe {
+  String title;
+  String description;
+  List<MediaRef> images;
+  List<AuthorInfo> authors;
+  List<String> keywords;
+
+  List<Ingredient> ingredients;
+  List<InstructionSection> instructionSections;
+
+  TimeInfo time;
+  String cookingMethod;
+  String yield;
+  NutritionInfo nutrition;
+
+  List<String> categories;
+  List<String> cuisines;
+
+  String sourceUrl;
+  SourceMetadata sourceMetadata;
+
+  DietType suitableForDiet;
+
+  DateInfo dateInfo;
+
   public static Recipe empty() {
-    return new Recipe(
-        null,
-        null,
-        List.of(),
-        List.of(),
-        new TimeInfo(null, null, null),
-        null,
-        new NutritionInfo(null, null, null, null, null),
-        List.of(),
-        List.of(),
-        List.of(),
-        List.of(),
-        null,
-        null);
+    return new Recipe();
   }
 }

@@ -8,6 +8,7 @@ import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.ParseIssueHandler;
 import com.hsteinmetz.jstove.model.*;
 import java.time.Duration;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import tools.jackson.databind.JsonNode;
@@ -29,7 +30,7 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
   }
 
   /**
-   * Normalizes a JSON node representing a recipe into a {@link Recipe} object.
+   * Normalizes a JSON node containing a recipe into a {@link Recipe} object.
    *
    * @param recipeNode the JSON node to normalize
    * @param parseIssueHandler the handler for parsing issues that may arise during normalization
@@ -64,6 +65,20 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
         reader
             .readAsText(recipeNode, fieldNameProvider.getFieldNamesForType(FieldType.SOURCE_URL))
             .orElse(null);
+
+    // TODO: keywords normalizer
+    List<String> keywords =
+        reader.readAsStringList(
+            recipeNode, fieldNameProvider.getFieldNamesForType(FieldType.KEYWORDS));
+
+    String cookingMethod =
+        reader
+            .readAsText(
+                recipeNode, fieldNameProvider.getFieldNamesForType(FieldType.COOKING_METHOD))
+            .orElse(null);
+
+    // TODO: Diet normalizer
+    DietType diet = null;
 
     List<String> categories =
         reader.readAsStringList(
@@ -126,12 +141,19 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
                     recipeNode, fieldNameProvider.getFieldNamesForType(FieldType.TOTAL_TIME)),
                 parseIssueHandler)
             .orElse(Duration.ZERO);
+    Duration perform =
+        durationNormalizer
+            .normalize(
+                reader.readFirst(
+                    recipeNode, fieldNameProvider.getFieldNamesForType(FieldType.PERFORM_TIME)),
+                parseIssueHandler)
+            .orElse(Duration.ZERO);
 
     if (total.equals(Duration.ZERO)) {
       total = prep.plus(cook);
     }
 
-    TimeInfo timeInfo = new TimeInfo(prep, cook, total);
+    TimeInfo timeInfo = new TimeInfo(prep, cook, total, perform);
 
     NutritionInfo nutritionInfo =
         new NutritionNormalizer(this.reader)
@@ -147,21 +169,32 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
             reader.readAsText(recipeNode, "@type").orElse(""),
             parseIssueHandler.getParseOptions().keepSourceNode() ? recipeNode : null);
 
+    // TODO
+    Date dateCreated = new Date();
+    Date dateUpdated = new Date();
+    Date datePublished = new Date();
+    DateInfo dateInfo = new DateInfo(dateCreated, dateUpdated, datePublished);
+
     Recipe result =
-        new Recipe(
-            title,
-            description,
-            ingredients,
-            instructions,
-            timeInfo,
-            yield,
-            nutritionInfo,
-            categories,
-            cuisines,
-            images,
-            authors,
-            sourceUrl,
-            sourceMetadata);
+        Recipe.builder()
+            .title(title)
+            .description(description)
+            .yield(yield)
+            .sourceUrl(sourceUrl)
+            .categories(categories)
+            .keywords(keywords)
+            .cookingMethod(cookingMethod)
+            .suitableForDiet(diet)
+            .cuisines(cuisines)
+            .ingredients(ingredients)
+            .instructionSections(instructions)
+            .time(timeInfo)
+            .nutrition(nutritionInfo)
+            .images(images)
+            .authors(authors)
+            .sourceMetadata(sourceMetadata)
+            .dateInfo(dateInfo)
+            .build();
 
     return Optional.of(result);
   }

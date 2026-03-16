@@ -19,5 +19,8 @@ public enum FieldType {
   PREP_TIME,
   COOK_TIME,
   TOTAL_TIME,
-  SOURCE_URL;
+  PERFORM_TIME,
+  SOURCE_URL,
+  KEYWORDS,
+  COOKING_METHOD;
 }
