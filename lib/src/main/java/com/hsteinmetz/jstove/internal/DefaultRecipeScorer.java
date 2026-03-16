@@ -1,12 +1,10 @@
 package com.hsteinmetz.jstove.internal;
 
-import com.hsteinmetz.jstove.api.FieldNameProvider;
 import com.hsteinmetz.jstove.api.FieldType;
 import com.hsteinmetz.jstove.api.RecipeScorer;
 import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.normalize.util.NodeShape;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import tools.jackson.databind.JsonNode;
@@ -17,7 +15,6 @@ import tools.jackson.databind.JsonNode;
 public class DefaultRecipeScorer implements RecipeScorer {
 
   private final FieldReader fieldReader;
-  private final FieldNameProvider fieldNameProvider;
 
   static final Map<FieldType, NodeShape> FIELD_TYPE_CHECKS = initFieldTypeChecks();
 
@@ -58,13 +55,11 @@ public class DefaultRecipeScorer implements RecipeScorer {
   }
 
   public DefaultRecipeScorer() {
-    this(new FieldReader(), new DefaultFieldNameProvider());
+    this(new FieldReader());
   }
 
-  DefaultRecipeScorer(FieldReader fieldReader, FieldNameProvider fieldNameProvider) {
+  DefaultRecipeScorer(FieldReader fieldReader) {
     this.fieldReader = Objects.requireNonNull(fieldReader, "fieldReader must not be null");
-    this.fieldNameProvider =
-        Objects.requireNonNull(fieldNameProvider, "fieldNameProvider must not be null");
   }
 
   public int score(JsonNode node) {
@@ -73,14 +68,10 @@ public class DefaultRecipeScorer implements RecipeScorer {
     for (var entry : FIELD_TYPE_CHECKS.entrySet()) {
       var fieldType = entry.getKey();
       var expectedShape = entry.getValue();
-      var fieldNames = fieldNameProvider.getFieldNamesForType(fieldType);
 
-      if (fieldNames == null || fieldNames.isEmpty()) {
-        fieldNames = List.of(fieldType.toString());
-      }
-
-      var fieldNode = fieldReader.readFirst(node, fieldNames);
-      boolean typeMatches = fieldNode.map(jsonNode -> expectedShape == NodeShape.of(jsonNode)).orElse(false);
+      var fieldNode = fieldReader.readFirst(node, fieldType.getFieldNames());
+      boolean typeMatches =
+          fieldNode.map(jsonNode -> expectedShape == NodeShape.of(jsonNode)).orElse(false);
 
       if (typeMatches) {
         score += FIELD_WEIGHTS.getOrDefault(fieldType, 0);

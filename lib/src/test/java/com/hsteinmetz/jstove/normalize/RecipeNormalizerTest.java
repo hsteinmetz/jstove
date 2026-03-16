@@ -98,27 +98,27 @@ class RecipeNormalizerTest {
     assertTrue(result.isPresent());
 
     var recipe = result.get();
-    assertEquals("Chocolate Chip Cookies", recipe.title());
-    assertEquals("Delicious homemade chocolate chip cookies.", recipe.description());
+    assertEquals("Chocolate Chip Cookies", recipe.getTitle());
+    assertEquals("Delicious homemade chocolate chip cookies.", recipe.getDescription());
 
-    assertEquals(4, recipe.ingredients().size());
+    assertEquals(4, recipe.getIngredients().size());
 
-    assertEquals(2, recipe.instructionSections().getFirst().steps().size());
-    assertEquals("Mixing the Dough", recipe.instructionSections().get(1).name());
-    assertEquals(1, recipe.instructionSections().get(1).steps().size());
-    assertEquals(3, recipe.instructionSections().getLast().steps().size());
+    assertEquals(2, recipe.getInstructionSections().getFirst().steps().size());
+    assertEquals("Mixing the Dough", recipe.getInstructionSections().get(1).name());
+    assertEquals(1, recipe.getInstructionSections().get(1).steps().size());
+    assertEquals(3, recipe.getInstructionSections().getLast().steps().size());
 
-    assertEquals("24 cookies", recipe.yield());
-    assertEquals("https://example.com/chocolate-chip-cookies", recipe.sourceUrl());
+    assertEquals("24 cookies", recipe.getYield());
+    assertEquals("https://example.com/chocolate-chip-cookies", recipe.getSourceUrl());
 
-    assertNotNull(recipe.nutrition());
-    assertEquals("200 calories", recipe.nutrition().calories());
-    assertEquals("30 grams", recipe.nutrition().carbohydrateContent());
-    assertEquals("2 grams", recipe.nutrition().proteinContent());
-    assertEquals("10 grams", recipe.nutrition().fatContent());
+    assertNotNull(recipe.getNutrition());
+    assertEquals("200 calories", recipe.getNutrition().calories());
+    assertEquals("30 grams", recipe.getNutrition().carbohydrateContent());
+    assertEquals("2 grams", recipe.getNutrition().proteinContent());
+    assertEquals("10 grams", recipe.getNutrition().fatContent());
 
-    assertNotNull(recipe.authors());
-    assertEquals(1, recipe.authors().size());
-    assertEquals("Jane Doe", recipe.authors().getFirst().name());
+    assertNotNull(recipe.getAuthors());
+    assertEquals(1, recipe.getAuthors().size());
+    assertEquals("Jane Doe", recipe.getAuthors().getFirst().name());
   }
 }
