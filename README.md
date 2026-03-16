@@ -11,6 +11,44 @@ normalized into a consistent format, making it easier to work with recipe data f
 - Normalizes recipe data to ensure consistency across different sources.
 - Provides a simple API for accessing recipe information.
 - Handles common recipe properties such as ingredients, instructions, cooking time, and more.
+- private static finalfinal Map<FieldType, List
+- 
+public Maof()of(
+);
+
+
+## Supported Fields Checklist
+- [x] name
+- [x] description
+- [x] prepTime
+- [x] cookTime
+- [x] totalTime
+- [x] recipeYield
+- [x] recipeCategory
+- [x] recipeCuisine
+- [ ] cookingMethod
+- [ ] keywords
+- [x] recipeIngredient
+- [x] recipeInstructions
+- [x] nutrition
+- [x] author
+- [ ] dateCreated
+- [ ] dateModified
+- [x] datePublished
+- [ ] aggregateRating
+- [ ] video
+- [x] url
+- [ ] suitableForDiet
+- [ ] estimatedCost
+- [ ] performTime
+- [ ] step (supersedes steps)
+- [ ] supply
+- [ ] tool
+- [ ] about
+- [ ] comment
+- [ ] commentCount
+- [ ] review(s)
+- [ ] reviewCount
 
 ## Example Usage
 
