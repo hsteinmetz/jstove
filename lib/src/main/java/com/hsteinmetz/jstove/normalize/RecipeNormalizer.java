@@ -57,8 +57,11 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
     String cookingMethod =
         reader.readAsText(recipeNode, FieldType.COOKING_METHOD.getFieldNames()).orElse(null);
 
-    // TODO: Diet normalizer
-    DietType diet = null;
+    DietType diet =
+        new DietNormalizer(reader)
+            .normalize(
+                reader.readFirst(recipeNode, FieldType.DIET.getFieldNames()), parseIssueHandler)
+            .orElse(null);
 
     List<String> categories =
         reader.readAsStringList(recipeNode, FieldType.CATEGORY.getFieldNames());

@@ -6,6 +6,7 @@ import com.hsteinmetz.jstove.api.ParseOptions;
 import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.ParseIssueHandler;
 import com.hsteinmetz.jstove.jackson.ObjectMapperFactory;
+import com.hsteinmetz.jstove.model.DietType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -85,6 +86,7 @@ class RecipeNormalizerTest {
                 "proteinContent": "2 grams",
                 "fatContent": "10 grams"
               },
+              "suitableForDiet": "VegetarianDiet",
               "author": {
                 "@type": "Person",
                 "name": "Jane Doe"
@@ -120,5 +122,7 @@ class RecipeNormalizerTest {
     assertNotNull(recipe.getAuthors());
     assertEquals(1, recipe.getAuthors().size());
     assertEquals("Jane Doe", recipe.getAuthors().getFirst().name());
+
+    assertEquals(DietType.VEGETARIAN, recipe.getSuitableForDiet());
   }
 }
