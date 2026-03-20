@@ -38,7 +38,7 @@ public Maof()of(
 - [ ] aggregateRating
 - [ ] video
 - [x] url
-- [ ] suitableForDiet
+- [x] suitableForDiet (just RestrictedDiet for now)
 - [ ] estimatedCost
 - [ ] performTime
 - [ ] step (supersedes steps)
@@ -62,9 +62,9 @@ if(result.hasWarnings()) {
 }
 
 Recipe recipe = result.recipe();
-System.out.println("Recipe Name: "+recipe.name());
-System.out.println("Ingredients: "+recipe.ingredients());
-System.out.println("Instructions: "+recipe.instructions());
+System.out.println("Recipe Name: " + recipe.name());
+System.out.println("Ingredients: " + recipe.ingredients());
+System.out.println("Instructions: " + recipe.instructions());
 ```
 
 ## Installation
