@@ -3,10 +3,10 @@ package com.hsteinmetz.jstove.normalize;
 import com.hsteinmetz.jstove.api.except.RecipeParseErrorCode;
 import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.ParseIssueHandler;
-import com.hsteinmetz.jstove.normalize.util.NodeShape;
 import java.time.Duration;
 import java.util.Optional;
 import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.JsonNodeType;
 
 /**
  * @author Hendrik Steinmetz
@@ -21,7 +21,7 @@ public class DurationNormalizer extends GenericNormalizer<Duration> {
   public Optional<Duration> normalize(JsonNode input, ParseIssueHandler parseIssueHandler) {
     if (isBlank(input)) return Optional.empty();
 
-    if (NodeShape.of(input).equals(NodeShape.STRING)) {
+    if (input.getNodeType().equals(JsonNodeType.STRING)) {
       return parseDuration(input, parseIssueHandler);
     }
 

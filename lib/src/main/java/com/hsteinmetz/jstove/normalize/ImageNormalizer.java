@@ -4,12 +4,12 @@ import com.hsteinmetz.jstove.api.except.RecipeParseErrorCode;
 import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.ParseIssueHandler;
 import com.hsteinmetz.jstove.model.MediaRef;
-import com.hsteinmetz.jstove.normalize.util.NodeShape;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.JsonNodeType;
 
 /**
  * @author Hendrik Steinmetz
@@ -31,7 +31,7 @@ public class ImageNormalizer extends GenericNormalizer<List<MediaRef>> {
   public Optional<List<MediaRef>> normalize(JsonNode input, ParseIssueHandler parseIssueHandler) {
     if (isBlank(input)) return Optional.empty();
 
-    return switch (NodeShape.of(input)) {
+    return switch (input.getNodeType()) {
       case STRING -> {
         var url = input.asString();
         yield Optional.of(List.of(MediaRef.of(url, null)));
@@ -55,14 +55,14 @@ public class ImageNormalizer extends GenericNormalizer<List<MediaRef>> {
 
   private List<MediaRef> readArray(JsonNode input, ParseIssueHandler parseIssueHandler) {
     var arrayNode = input.asArray();
-    var types = arrayNode.elements().stream().map(NodeShape::of).toList();
+    var types = arrayNode.elements().stream().map(JsonNode::getNodeType).toList();
 
-    if (types.stream().allMatch(shape -> shape == NodeShape.STRING)) {
+    if (types.stream().allMatch(shape -> shape == JsonNodeType.STRING)) {
       return arrayNode.elements().stream()
           .map(JsonNode::asString)
           .map(url -> MediaRef.of(url, null))
           .toList();
-    } else if (types.stream().allMatch(shape -> shape == NodeShape.OBJECT)) {
+    } else if (types.stream().allMatch(shape -> shape == JsonNodeType.OBJECT)) {
       return arrayNode.elements().stream()
           .map(node -> readSingleObject(node, parseIssueHandler).orElse(null))
           .filter(Objects::nonNull)

@@ -4,7 +4,6 @@ import com.hsteinmetz.jstove.api.except.RecipeParseErrorCode;
 import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.ParseIssueHandler;
 import com.hsteinmetz.jstove.model.AuthorInfo;
-import com.hsteinmetz.jstove.normalize.util.NodeShape;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +23,7 @@ public class AuthorNormalizer extends GenericNormalizer<List<AuthorInfo>> {
       JsonNode authorNode, ParseIssueHandler parseIssueHandler) {
     if (isBlank(authorNode)) return Optional.empty();
 
-    return switch (NodeShape.of(authorNode)) {
+    return switch (authorNode.getNodeType()) {
       case ARRAY -> normalizeArray(authorNode, parseIssueHandler);
       case OBJECT -> {
         AuthorInfo info = constructFromObject(authorNode);
@@ -47,7 +46,7 @@ public class AuthorNormalizer extends GenericNormalizer<List<AuthorInfo>> {
       JsonNode authorNode, ParseIssueHandler parseIssueHandler) {
     List<AuthorInfo> authors = new ArrayList<>();
     for (JsonNode author : authorNode) {
-      switch (NodeShape.of(author)) {
+      switch (author.getNodeType()) {
         case OBJECT -> authors.add(constructFromObject(author));
         case STRING -> authors.add(new AuthorInfo(author.asString(), null, null));
         default ->

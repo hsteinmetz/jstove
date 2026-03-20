@@ -3,11 +3,11 @@ package com.hsteinmetz.jstove.internal;
 import com.hsteinmetz.jstove.api.FieldType;
 import com.hsteinmetz.jstove.api.RecipeScorer;
 import com.hsteinmetz.jstove.extract.FieldReader;
-import com.hsteinmetz.jstove.normalize.util.NodeShape;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
 import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.JsonNodeType;
 
 /**
  * @author Hendrik Steinmetz
@@ -16,7 +16,7 @@ public class DefaultRecipeScorer implements RecipeScorer {
 
   private final FieldReader fieldReader;
 
-  static final Map<FieldType, NodeShape> FIELD_TYPE_CHECKS = initFieldTypeChecks();
+  static final Map<FieldType, JsonNodeType> FIELD_TYPE_CHECKS = initFieldTypeChecks();
 
   static final Map<FieldType, Integer> FIELD_WEIGHTS =
       Map.of(
@@ -39,17 +39,17 @@ public class DefaultRecipeScorer implements RecipeScorer {
           FieldType.DATE_PUBLISHED,
           1);
 
-  private static Map<FieldType, NodeShape> initFieldTypeChecks() {
-    var checks = new EnumMap<FieldType, NodeShape>(FieldType.class);
+  private static Map<FieldType, JsonNodeType> initFieldTypeChecks() {
+    var checks = new EnumMap<FieldType, JsonNodeType>(FieldType.class);
     for (var fieldType : FieldType.values()) {
-      checks.put(fieldType, NodeShape.STRING);
+      checks.put(fieldType, JsonNodeType.STRING);
     }
 
-    checks.put(FieldType.NUTRITION, NodeShape.OBJECT);
-    checks.put(FieldType.RECIPE_INGREDIENT, NodeShape.ARRAY);
-    checks.put(FieldType.RECIPE_INSTRUCTIONS, NodeShape.ARRAY);
-    checks.put(FieldType.IMAGE, NodeShape.ARRAY);
-    checks.put(FieldType.AUTHOR, NodeShape.OBJECT);
+    checks.put(FieldType.NUTRITION, JsonNodeType.OBJECT);
+    checks.put(FieldType.RECIPE_INGREDIENT, JsonNodeType.ARRAY);
+    checks.put(FieldType.RECIPE_INSTRUCTIONS, JsonNodeType.ARRAY);
+    checks.put(FieldType.IMAGE, JsonNodeType.ARRAY);
+    checks.put(FieldType.AUTHOR, JsonNodeType.OBJECT);
 
     return Map.copyOf(checks);
   }
@@ -71,7 +71,7 @@ public class DefaultRecipeScorer implements RecipeScorer {
 
       var fieldNode = fieldReader.readFirst(node, fieldType.getFieldNames());
       boolean typeMatches =
-          fieldNode.map(jsonNode -> expectedShape == NodeShape.of(jsonNode)).orElse(false);
+          fieldNode.map(jsonNode -> expectedShape == jsonNode.getNodeType()).orElse(false);
 
       if (typeMatches) {
         score += FIELD_WEIGHTS.getOrDefault(fieldType, 0);
