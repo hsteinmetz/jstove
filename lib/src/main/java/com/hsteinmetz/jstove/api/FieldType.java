@@ -4,6 +4,11 @@ import java.util.List;
 import lombok.Getter;
 
 /**
+ * Maps common recipe fields to their possible field names in the input JSON. Each enum constant
+ * represents a specific recipe field and is associated with a list of potential field names that
+ * may be used in the input data to represent that field. This allows for flexible parsing of recipe
+ * data, accommodating variations in field naming across different sources.
+ *
  * @author Hendrik Steinmetz
  */
 public enum FieldType {
@@ -29,8 +34,7 @@ public enum FieldType {
   KEYWORDS("keywords"),
   COOKING_METHOD("cookingMethod");
 
-  @Getter
-  private final List<String> fieldNames;
+  @Getter private final List<String> fieldNames;
 
   FieldType(String... names) {
     this.fieldNames = List.of(names);
