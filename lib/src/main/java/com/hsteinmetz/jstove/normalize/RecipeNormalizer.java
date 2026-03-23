@@ -6,7 +6,7 @@ import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.ParseIssueHandler;
 import com.hsteinmetz.jstove.model.*;
 import java.time.Duration;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import tools.jackson.databind.JsonNode;
@@ -51,8 +51,8 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
     String sourceUrl =
         reader.readAsText(recipeNode, FieldType.SOURCE_URL.getFieldNames()).orElse(null);
 
-    // TODO: keywords normalizer
-    List<String> keywords = reader.readAsStringList(recipeNode, FieldType.KEYWORDS.getFieldNames());
+    List<String> keywords =
+        new KeywordNormalizer(reader).normalize(recipeNode, parseIssueHandler).orElse(null);
 
     String cookingMethod =
         reader.readAsText(recipeNode, FieldType.COOKING_METHOD.getFieldNames()).orElse(null);
@@ -136,10 +136,24 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
             reader.readAsText(recipeNode, "@type").orElse(""),
             parseIssueHandler.getParseOptions().keepSourceNode() ? recipeNode : null);
 
-    // TODO
-    Date dateCreated = new Date();
-    Date dateUpdated = new Date();
-    Date datePublished = new Date();
+    ZonedDateTime dateCreated =
+        new DateNormalizer(reader)
+            .normalize(
+                reader.readFirst(recipeNode, FieldType.DATE_CREATED.getFieldNames()),
+                parseIssueHandler)
+            .orElse(null);
+    ZonedDateTime dateUpdated =
+        new DateNormalizer(reader)
+            .normalize(
+                reader.readFirst(recipeNode, FieldType.DATE_UPDATED.getFieldNames()),
+                parseIssueHandler)
+            .orElse(null);
+    ZonedDateTime datePublished =
+        new DateNormalizer(reader)
+            .normalize(
+                reader.readFirst(recipeNode, FieldType.DATE_PUBLISHED.getFieldNames()),
+                parseIssueHandler)
+            .orElse(null);
     DateInfo dateInfo = new DateInfo(dateCreated, dateUpdated, datePublished);
 
     Recipe result =
