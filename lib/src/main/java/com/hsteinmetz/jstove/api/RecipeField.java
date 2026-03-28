@@ -11,13 +11,13 @@ import lombok.Getter;
  *
  * @author Hendrik Steinmetz
  */
-public enum FieldType {
+public enum RecipeField {
   TYPE("@type"),
   NAME("name", "title"),
   DESCRIPTION("description"),
   NUTRITION("nutrition"),
   RECIPE_INGREDIENT("recipeIngredient", "ingredients", "recipeIngredients"),
-  RECIPE_INSTRUCTIONS("recipeInstructions", "instructions"),
+  RECIPE_INSTRUCTIONS("step", "steps", "recipeInstructions", "instructions"),
   IMAGE("image"),
   AUTHOR("author"),
   DATE_PUBLISHED("datePublished"),
@@ -38,7 +38,7 @@ public enum FieldType {
 
   @Getter private final List<String> fieldNames;
 
-  FieldType(String... names) {
+  RecipeField(String... names) {
     this.fieldNames = List.of(names);
   }
 }

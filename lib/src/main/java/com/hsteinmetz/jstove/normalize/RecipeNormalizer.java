@@ -1,6 +1,6 @@
 package com.hsteinmetz.jstove.normalize;
 
-import com.hsteinmetz.jstove.api.FieldType;
+import com.hsteinmetz.jstove.api.RecipeField;
 import com.hsteinmetz.jstove.api.except.RecipeParseErrorCode;
 import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.ParseIssueHandler;
@@ -41,79 +41,80 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
           "No recipe node found; using empty recipe");
     }
 
-    String title = reader.readAsText(recipeNode, FieldType.NAME.getFieldNames()).orElse(null);
+    String title = reader.readAsText(recipeNode, RecipeField.NAME.getFieldNames()).orElse(null);
 
     String description =
-        reader.readAsText(recipeNode, FieldType.DESCRIPTION.getFieldNames()).orElse(null);
+        reader.readAsText(recipeNode, RecipeField.DESCRIPTION.getFieldNames()).orElse(null);
 
-    String yield = reader.readAsText(recipeNode, FieldType.YIELD.getFieldNames()).orElse(null);
+    String yield = reader.readAsText(recipeNode, RecipeField.YIELD.getFieldNames()).orElse(null);
 
     String sourceUrl =
-        reader.readAsText(recipeNode, FieldType.SOURCE_URL.getFieldNames()).orElse(null);
+        reader.readAsText(recipeNode, RecipeField.SOURCE_URL.getFieldNames()).orElse(null);
 
     List<String> keywords =
         new KeywordNormalizer(reader).normalize(recipeNode, parseIssueHandler).orElse(null);
 
     String cookingMethod =
-        reader.readAsText(recipeNode, FieldType.COOKING_METHOD.getFieldNames()).orElse(null);
+        reader.readAsText(recipeNode, RecipeField.COOKING_METHOD.getFieldNames()).orElse(null);
 
     DietType diet =
         new DietNormalizer(reader)
             .normalize(
-                reader.readFirst(recipeNode, FieldType.DIET.getFieldNames()), parseIssueHandler)
+                reader.readFirst(recipeNode, RecipeField.DIET.getFieldNames()), parseIssueHandler)
             .orElse(null);
 
     List<String> categories =
-        reader.readAsStringList(recipeNode, FieldType.CATEGORY.getFieldNames());
-    List<String> cuisines = reader.readAsStringList(recipeNode, FieldType.CUISINE.getFieldNames());
+        reader.readAsStringList(recipeNode, RecipeField.CATEGORY.getFieldNames());
+    List<String> cuisines =
+        reader.readAsStringList(recipeNode, RecipeField.CUISINE.getFieldNames());
 
     List<Ingredient> ingredients =
         new IngredientNormalizer(this.reader)
             .normalize(
-                reader.readFirst(recipeNode, FieldType.RECIPE_INGREDIENT.getFieldNames()),
+                reader.readFirst(recipeNode, RecipeField.RECIPE_INGREDIENT.getFieldNames()),
                 parseIssueHandler)
             .orElse(List.of());
     List<InstructionSection> instructions =
         new InstructionNormalizer(this.reader)
             .normalize(
-                reader.readFirst(recipeNode, FieldType.RECIPE_INSTRUCTIONS.getFieldNames()),
+                reader.readFirst(recipeNode, RecipeField.RECIPE_INSTRUCTIONS.getFieldNames()),
                 parseIssueHandler)
             .orElse(List.of());
 
     List<MediaRef> images =
         new ImageNormalizer(this.reader)
             .normalize(
-                reader.readFirst(recipeNode, FieldType.IMAGE.getFieldNames()), parseIssueHandler)
+                reader.readFirst(recipeNode, RecipeField.IMAGE.getFieldNames()), parseIssueHandler)
             .orElse(List.of());
     List<AuthorInfo> authors =
         new AuthorNormalizer(reader)
             .normalize(
-                reader.readFirst(recipeNode, FieldType.AUTHOR.getFieldNames()), parseIssueHandler)
+                reader.readFirst(recipeNode, RecipeField.AUTHOR.getFieldNames()), parseIssueHandler)
             .orElse(List.of());
 
     DurationNormalizer durationNormalizer = new DurationNormalizer(reader);
     Duration prep =
         durationNormalizer
             .normalize(
-                reader.readFirst(recipeNode, FieldType.PREP_TIME.getFieldNames()),
+                reader.readFirst(recipeNode, RecipeField.PREP_TIME.getFieldNames()),
                 parseIssueHandler)
             .orElse(Duration.ZERO);
     Duration cook =
         durationNormalizer
             .normalize(
-                reader.readFirst(recipeNode, FieldType.COOK_TIME.getFieldNames()),
+                reader.readFirst(recipeNode, RecipeField.COOK_TIME.getFieldNames()),
                 parseIssueHandler)
             .orElse(Duration.ZERO);
     Duration total =
         durationNormalizer
             .normalize(
-                reader.readFirst(recipeNode, FieldType.TOTAL_TIME.getFieldNames()),
+                reader.readFirst(recipeNode, RecipeField.TOTAL_TIME.getFieldNames()),
                 parseIssueHandler)
             .orElse(Duration.ZERO);
     Duration perform =
         durationNormalizer
             .normalize(
-                reader.readFirst(recipeNode, FieldType.PERFORM_TIME.getFieldNames()),
+                reader.readFirst(recipeNode, RecipeField.PERFORM_TIME.getFieldNames()),
                 parseIssueHandler)
             .orElse(Duration.ZERO);
 
@@ -126,7 +127,7 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
     NutritionInfo nutritionInfo =
         new NutritionNormalizer(this.reader)
             .normalize(
-                reader.readFirst(recipeNode, FieldType.NUTRITION.getFieldNames()),
+                reader.readFirst(recipeNode, RecipeField.NUTRITION.getFieldNames()),
                 parseIssueHandler)
             .orElse(null);
 
@@ -139,19 +140,19 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
     ZonedDateTime dateCreated =
         new DateNormalizer(reader)
             .normalize(
-                reader.readFirst(recipeNode, FieldType.DATE_CREATED.getFieldNames()),
+                reader.readFirst(recipeNode, RecipeField.DATE_CREATED.getFieldNames()),
                 parseIssueHandler)
             .orElse(null);
     ZonedDateTime dateUpdated =
         new DateNormalizer(reader)
             .normalize(
-                reader.readFirst(recipeNode, FieldType.DATE_UPDATED.getFieldNames()),
+                reader.readFirst(recipeNode, RecipeField.DATE_UPDATED.getFieldNames()),
                 parseIssueHandler)
             .orElse(null);
     ZonedDateTime datePublished =
         new DateNormalizer(reader)
             .normalize(
-                reader.readFirst(recipeNode, FieldType.DATE_PUBLISHED.getFieldNames()),
+                reader.readFirst(recipeNode, RecipeField.DATE_PUBLISHED.getFieldNames()),
                 parseIssueHandler)
             .orElse(null);
     DateInfo dateInfo = new DateInfo(dateCreated, dateUpdated, datePublished);
@@ -159,7 +160,7 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
     AggregateRating aggregateRating =
         new AggregateRatingNormalizer(reader)
             .normalize(
-                reader.readFirst(recipeNode, FieldType.AGGREGATE_RATING.getFieldNames()),
+                reader.readFirst(recipeNode, RecipeField.AGGREGATE_RATING.getFieldNames()),
                 parseIssueHandler)
             .orElse(null);
 

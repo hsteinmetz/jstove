@@ -1,6 +1,6 @@
 package com.hsteinmetz.jstove.internal;
 
-import com.hsteinmetz.jstove.api.FieldType;
+import com.hsteinmetz.jstove.api.RecipeField;
 import com.hsteinmetz.jstove.api.RecipeScorer;
 import com.hsteinmetz.jstove.extract.FieldReader;
 import java.util.EnumMap;
@@ -16,40 +16,40 @@ public class DefaultRecipeScorer implements RecipeScorer {
 
   private final FieldReader fieldReader;
 
-  static final Map<FieldType, JsonNodeType> FIELD_TYPE_CHECKS = initFieldTypeChecks();
+  static final Map<RecipeField, JsonNodeType> FIELD_TYPE_CHECKS = initFieldTypeChecks();
 
-  static final Map<FieldType, Integer> FIELD_WEIGHTS =
+  static final Map<RecipeField, Integer> FIELD_WEIGHTS =
       Map.of(
-          FieldType.TYPE,
+          RecipeField.TYPE,
           10,
-          FieldType.NAME,
+          RecipeField.NAME,
           5,
-          FieldType.DESCRIPTION,
+          RecipeField.DESCRIPTION,
           3,
-          FieldType.NUTRITION,
+          RecipeField.NUTRITION,
           2,
-          FieldType.RECIPE_INGREDIENT,
+          RecipeField.RECIPE_INGREDIENT,
           5,
-          FieldType.RECIPE_INSTRUCTIONS,
+          RecipeField.RECIPE_INSTRUCTIONS,
           5,
-          FieldType.IMAGE,
+          RecipeField.IMAGE,
           1,
-          FieldType.AUTHOR,
+          RecipeField.AUTHOR,
           1,
-          FieldType.DATE_PUBLISHED,
+          RecipeField.DATE_PUBLISHED,
           1);
 
-  private static Map<FieldType, JsonNodeType> initFieldTypeChecks() {
-    var checks = new EnumMap<FieldType, JsonNodeType>(FieldType.class);
-    for (var fieldType : FieldType.values()) {
+  private static Map<RecipeField, JsonNodeType> initFieldTypeChecks() {
+    var checks = new EnumMap<RecipeField, JsonNodeType>(RecipeField.class);
+    for (var fieldType : RecipeField.values()) {
       checks.put(fieldType, JsonNodeType.STRING);
     }
 
-    checks.put(FieldType.NUTRITION, JsonNodeType.OBJECT);
-    checks.put(FieldType.RECIPE_INGREDIENT, JsonNodeType.ARRAY);
-    checks.put(FieldType.RECIPE_INSTRUCTIONS, JsonNodeType.ARRAY);
-    checks.put(FieldType.IMAGE, JsonNodeType.ARRAY);
-    checks.put(FieldType.AUTHOR, JsonNodeType.OBJECT);
+    checks.put(RecipeField.NUTRITION, JsonNodeType.OBJECT);
+    checks.put(RecipeField.RECIPE_INGREDIENT, JsonNodeType.ARRAY);
+    checks.put(RecipeField.RECIPE_INSTRUCTIONS, JsonNodeType.ARRAY);
+    checks.put(RecipeField.IMAGE, JsonNodeType.ARRAY);
+    checks.put(RecipeField.AUTHOR, JsonNodeType.OBJECT);
 
     return Map.copyOf(checks);
   }

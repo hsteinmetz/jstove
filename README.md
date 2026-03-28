@@ -36,7 +36,7 @@ normalized into a consistent format, making it easier to work with recipe data f
 - [x] suitableForDiet (just RestrictedDiet for now)
 - [ ] estimatedCost
 - [x] performTime
-- [ ] step (supersedes steps)
+- [x] step (supersedes steps which supersedes recipeInstructions)
 - [ ] supply
 - [ ] tool
 - [ ] about
