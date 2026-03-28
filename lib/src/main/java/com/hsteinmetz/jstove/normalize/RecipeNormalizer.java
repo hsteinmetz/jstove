@@ -156,6 +156,13 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
             .orElse(null);
     DateInfo dateInfo = new DateInfo(dateCreated, dateUpdated, datePublished);
 
+    AggregateRating aggregateRating =
+        new AggregateRatingNormalizer(reader)
+            .normalize(
+                reader.readFirst(recipeNode, FieldType.AGGREGATE_RATING.getFieldNames()),
+                parseIssueHandler)
+            .orElse(null);
+
     Recipe result =
         Recipe.builder()
             .title(title)
@@ -175,6 +182,7 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
             .authors(authors)
             .sourceMetadata(sourceMetadata)
             .dateInfo(dateInfo)
+            .aggregateRating(aggregateRating)
             .build();
 
     return Optional.of(result);

@@ -38,6 +38,8 @@ public class Recipe {
 
   DateInfo dateInfo;
 
+  AggregateRating aggregateRating;
+
   public static Recipe empty() {
     return new Recipe();
   }

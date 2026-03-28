@@ -33,7 +33,8 @@ public enum FieldType {
   PERFORM_TIME("performTime"),
   KEYWORDS("keywords"),
   COOKING_METHOD("cookingMethod"),
-  DIET("suitableForDiet", "diet");
+  DIET("suitableForDiet", "diet"),
+  AGGREGATE_RATING("aggregateRating");
 
   @Getter private final List<String> fieldNames;
 

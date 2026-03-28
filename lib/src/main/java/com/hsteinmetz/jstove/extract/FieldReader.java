@@ -66,6 +66,16 @@ public class FieldReader {
     return readAsText(node, List.of(fieldName));
   }
 
+  public Optional<Number> readNumber(JsonNode node, String fieldName) {
+    var fieldOpt = read(node, fieldName);
+
+    if (fieldOpt.isPresent() && fieldOpt.get().getNodeType().equals(JsonNodeType.NUMBER)) {
+      return fieldOpt.map(JsonNode::numberValue);
+    }
+
+    return Optional.empty();
+  }
+
   public boolean has(JsonNode node, String fieldName) {
     return this.get(node, fieldName).isPresent();
   }

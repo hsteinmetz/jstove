@@ -30,12 +30,12 @@ normalized into a consistent format, making it easier to work with recipe data f
 - [x] dateCreated
 - [x] dateModified
 - [x] datePublished
-- [ ] aggregateRating
+- [x] aggregateRating
 - [ ] video
 - [x] url
 - [x] suitableForDiet (just RestrictedDiet for now)
 - [ ] estimatedCost
-- [ ] performTime
+- [x] performTime
 - [ ] step (supersedes steps)
 - [ ] supply
 - [ ] tool
