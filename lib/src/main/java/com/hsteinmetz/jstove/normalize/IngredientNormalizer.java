@@ -15,6 +15,7 @@ import tools.jackson.databind.ObjectMapper;
 // this may be desirable in strict mode, in lenient mode it may be better to just skip malformed
 // ingredients and continue parsing the rest of the list.
 // TODO: if the raw node is to be kept, store it in the ingredient object
+// TODO: support PropertyValue like in the schema.org example
 /**
  * Normalizer for the recipeIngredient field. This field can be either an array of strings or an
  * ItemList object with an itemListElement array of strings. This normalizer handles both cases and

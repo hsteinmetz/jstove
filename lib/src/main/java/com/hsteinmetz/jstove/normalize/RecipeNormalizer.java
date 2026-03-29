@@ -164,6 +164,13 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
                 parseIssueHandler)
             .orElse(null);
 
+    CostInfo costInfo =
+        new EstimatedCostNormalizer(reader)
+            .normalize(
+                reader.readFirst(recipeNode, RecipeField.ESTIMATED_COST.getFieldNames()),
+                parseIssueHandler)
+            .orElse(null);
+
     Recipe result =
         Recipe.builder()
             .title(title)
@@ -184,6 +191,7 @@ public class RecipeNormalizer extends GenericNormalizer<Recipe> {
             .sourceMetadata(sourceMetadata)
             .dateInfo(dateInfo)
             .aggregateRating(aggregateRating)
+            .costInfo(costInfo)
             .build();
 
     return Optional.of(result);

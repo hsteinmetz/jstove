@@ -48,10 +48,6 @@ public class FieldReader {
     return readAsList(node, List.of(fieldName));
   }
 
-  public List<String> readAsStringList(JsonNode node, String fieldName) {
-    return readAsList(node, fieldName).stream().map(JsonNode::asString).toList();
-  }
-
   public List<String> readAsStringList(JsonNode node, List<String> fieldNames) {
     return readAsList(node, fieldNames).stream().map(JsonNode::asString).toList();
   }
@@ -68,6 +64,16 @@ public class FieldReader {
 
   public Optional<Number> readNumber(JsonNode node, String fieldName) {
     var fieldOpt = read(node, fieldName);
+
+    if (fieldOpt.isPresent() && fieldOpt.get().getNodeType().equals(JsonNodeType.NUMBER)) {
+      return fieldOpt.map(JsonNode::numberValue);
+    }
+
+    return Optional.empty();
+  }
+
+  public Optional<Number> readNumber(JsonNode number, List<String> fieldNames) {
+    var fieldOpt = readFirst(number, fieldNames);
 
     if (fieldOpt.isPresent() && fieldOpt.get().getNodeType().equals(JsonNodeType.NUMBER)) {
       return fieldOpt.map(JsonNode::numberValue);

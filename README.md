@@ -34,7 +34,7 @@ normalized into a consistent format, making it easier to work with recipe data f
 - [ ] video
 - [x] url
 - [x] suitableForDiet (just RestrictedDiet for now)
-- [ ] estimatedCost
+- [x] estimatedCost
 - [x] performTime
 - [x] step (supersedes steps which supersedes recipeInstructions)
 - [ ] supply

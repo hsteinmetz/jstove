@@ -34,7 +34,14 @@ public enum RecipeField {
   KEYWORDS("keywords"),
   COOKING_METHOD("cookingMethod"),
   DIET("suitableForDiet", "diet"),
-  AGGREGATE_RATING("aggregateRating");
+  AGGREGATE_RATING("aggregateRating"),
+
+  // https://schema.org/MonetaryAmount
+  ESTIMATED_COST("estimatedCost"),
+  CURRENCY("currency"),
+  MIN_VALUE("minValue"),
+  MAX_VALUE("maxValue"),
+  VALUE("value");
 
   @Getter private final List<String> fieldNames;
 

@@ -39,6 +39,7 @@ public class Recipe {
   DateInfo dateInfo;
 
   AggregateRating aggregateRating;
+  CostInfo costInfo;
 
   public static Recipe empty() {
     return new Recipe();
