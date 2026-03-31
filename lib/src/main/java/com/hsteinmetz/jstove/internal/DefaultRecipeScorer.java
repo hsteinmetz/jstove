@@ -12,32 +12,30 @@ import tools.jackson.databind.node.JsonNodeType;
 /**
  * @author Hendrik Steinmetz
  */
+// TODO add in remaining fields
 public class DefaultRecipeScorer implements RecipeScorer {
 
   private final FieldReader fieldReader;
 
   static final Map<RecipeField, JsonNodeType> FIELD_TYPE_CHECKS = initFieldTypeChecks();
 
-  static final Map<RecipeField, Integer> FIELD_WEIGHTS =
-      Map.of(
-          RecipeField.TYPE,
-          10,
-          RecipeField.NAME,
-          5,
-          RecipeField.DESCRIPTION,
-          3,
-          RecipeField.NUTRITION,
-          2,
-          RecipeField.RECIPE_INGREDIENT,
-          5,
-          RecipeField.RECIPE_INSTRUCTIONS,
-          5,
-          RecipeField.IMAGE,
-          1,
-          RecipeField.AUTHOR,
-          1,
-          RecipeField.DATE_PUBLISHED,
-          1);
+  static final Map<RecipeField, Integer> FIELD_WEIGHTS = initFieldScores();
+
+  private static Map<RecipeField, Integer> initFieldScores() {
+    Map<RecipeField, Integer> scores = new EnumMap<>(RecipeField.class);
+    for (RecipeField field : RecipeField.values()) {
+      scores.put(field, 1);
+    }
+
+    scores.put(RecipeField.TYPE, 10);
+    scores.put(RecipeField.NAME, 5);
+    scores.put(RecipeField.DESCRIPTION, 3);
+    scores.put(RecipeField.NUTRITION, 2);
+    scores.put(RecipeField.RECIPE_INGREDIENT, 5);
+    scores.put(RecipeField.RECIPE_INSTRUCTIONS, 5);
+
+    return scores;
+  }
 
   private static Map<RecipeField, JsonNodeType> initFieldTypeChecks() {
     var checks = new EnumMap<RecipeField, JsonNodeType>(RecipeField.class);

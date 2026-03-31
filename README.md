@@ -31,15 +31,14 @@ normalized into a consistent format, making it easier to work with recipe data f
 - [x] dateModified
 - [x] datePublished
 - [x] aggregateRating
-- [ ] video
 - [x] url
 - [x] suitableForDiet (just RestrictedDiet for now)
 - [x] estimatedCost
 - [x] performTime
 - [x] step (supersedes steps which supersedes recipeInstructions)
-- [ ] supply
-- [ ] tool
-- [ ] about
+
+### Planned for future versions
+- [ ] video
 - [ ] comment
 - [ ] commentCount
 - [ ] review(s)
