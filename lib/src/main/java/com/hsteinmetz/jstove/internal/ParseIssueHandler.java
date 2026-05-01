@@ -7,6 +7,7 @@ import com.hsteinmetz.jstove.api.except.RecipeParseErrorCode;
 import com.hsteinmetz.jstove.api.except.RecipeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
 import tools.jackson.core.JsonPointer;
 
 /**
@@ -18,7 +19,8 @@ import tools.jackson.core.JsonPointer;
  * @author Hendrik Steinmetz
  */
 public final class ParseIssueHandler {
-  private final ParseOptions parseOptions;
+  private final int MAX_WARNINGS = 100;
+  @Getter private final ParseOptions parseOptions;
 
   private final List<ParseWarning> warnings = new ArrayList<>();
 
@@ -41,12 +43,12 @@ public final class ParseIssueHandler {
 
   private void addWarning(
       RecipeParseErrorCode code, String field, String message, JsonPointer pointer) {
+    if (warnings.size() >= MAX_WARNINGS) {
+      throw new IllegalStateException("Maximum number of warnings (" + MAX_WARNINGS + ") exceeded");
+    }
+
     warnings.add(
         new ParseWarning(code, field, message, pointer == null ? JsonPointer.empty() : pointer));
-  }
-
-  private void addWarning(ParseWarning warning) {
-    warnings.add(warning);
   }
 
   public List<ParseWarning> toList() {
@@ -55,9 +57,5 @@ public final class ParseIssueHandler {
 
   public boolean isEmpty() {
     return warnings.isEmpty();
-  }
-
-  public ParseOptions getParseOptions() {
-    return parseOptions;
   }
 }
