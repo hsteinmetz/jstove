@@ -63,16 +63,19 @@ public class DefaultRecipeScorer implements RecipeScorer {
   public int score(JsonNode node) {
     int score = 0;
 
-    for (var entry : FIELD_TYPE_CHECKS.entrySet()) {
-      var fieldType = entry.getKey();
-      var expectedShape = entry.getValue();
+    for (var field : RecipeField.values()) {
+      if (fieldReader.readFirst(node, field.getFieldNames()).isPresent()) {
+        score += 1;
+      }
 
-      var fieldNode = fieldReader.readFirst(node, fieldType.getFieldNames());
+      var expectedShape = FIELD_TYPE_CHECKS.get(field);
+
+      var fieldNode = fieldReader.readFirst(node, field.getFieldNames());
       boolean typeMatches =
           fieldNode.map(jsonNode -> expectedShape == jsonNode.getNodeType()).orElse(false);
 
       if (typeMatches) {
-        score += FIELD_WEIGHTS.getOrDefault(fieldType, 0);
+        score += FIELD_WEIGHTS.getOrDefault(field, 0);
       }
     }
 

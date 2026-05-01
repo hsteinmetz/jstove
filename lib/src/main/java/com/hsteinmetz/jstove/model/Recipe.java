@@ -1,10 +1,7 @@
 package com.hsteinmetz.jstove.model;
 
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * @author Hendrik Steinmetz
@@ -13,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Getter
+@EqualsAndHashCode
 public class Recipe {
   String title;
   String description;

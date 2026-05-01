@@ -35,9 +35,9 @@ public class RecipeNodeSelectorTest {
 
     var scores = root.valueStream().map(scorer::score).toList();
 
-    assertEquals(15, scores.getFirst());
-    assertEquals(16, scores.get(1));
-    assertEquals(25, scores.getLast());
+    assertEquals(18, scores.getFirst());
+    assertEquals(20, scores.get(1));
+    assertEquals(29, scores.getLast());
 
     var best = selector.selectBest(nodesList, parseIssueHandler).orElseThrow();
     assertEquals("Recipe C", best.get("name").asString());
