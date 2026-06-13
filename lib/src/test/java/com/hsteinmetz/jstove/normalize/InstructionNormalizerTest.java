@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.hsteinmetz.jstove.api.ParseOptions;
 import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.ParseIssueHandler;
-import com.hsteinmetz.jstove.jackson.ObjectMapperFactory;
+import com.hsteinmetz.jstove.internal.ObjectMapperFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

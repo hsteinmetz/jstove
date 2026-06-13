@@ -1,7 +1,7 @@
 package com.hsteinmetz.jstove.normalize;
 
 import com.hsteinmetz.jstove.internal.ParseIssueHandler;
-import com.hsteinmetz.jstove.jackson.ObjectMapperFactory;
+import com.hsteinmetz.jstove.internal.ObjectMapperFactory;
 import org.junit.jupiter.api.BeforeEach;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.JsonNodeFactory;

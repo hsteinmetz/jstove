@@ -3,7 +3,7 @@ package com.hsteinmetz.jstove.normalize;
 import com.hsteinmetz.jstove.api.except.RecipeParseErrorCode;
 import com.hsteinmetz.jstove.extract.FieldReader;
 import com.hsteinmetz.jstove.internal.ParseIssueHandler;
-import com.hsteinmetz.jstove.jackson.ObjectMapperFactory;
+import com.hsteinmetz.jstove.internal.ObjectMapperFactory;
 import com.hsteinmetz.jstove.model.Ingredient;
 import java.util.ArrayList;
 import java.util.List;

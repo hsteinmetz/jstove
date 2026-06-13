@@ -19,6 +19,8 @@ import tools.jackson.core.JsonPointer;
  * @author Hendrik Steinmetz
  */
 public final class ParseIssueHandler {
+
+  // TODO make configurable via env var, file or ParseOptions
   private final int MAX_WARNINGS = 100;
   @Getter private final ParseOptions parseOptions;
 

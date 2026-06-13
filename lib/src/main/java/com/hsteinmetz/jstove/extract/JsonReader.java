@@ -1,6 +1,6 @@
 package com.hsteinmetz.jstove.extract;
 
-import com.hsteinmetz.jstove.jackson.ObjectMapperFactory;
+import com.hsteinmetz.jstove.internal.ObjectMapperFactory;
 import java.io.InputStream;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;

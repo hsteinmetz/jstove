@@ -7,7 +7,6 @@ import com.hsteinmetz.jstove.api.except.RecipeParseErrorCode;
 import com.hsteinmetz.jstove.extract.JsonReader;
 import com.hsteinmetz.jstove.extract.RecipeNodeLocator;
 import com.hsteinmetz.jstove.extract.RecipeNodeSelector;
-import com.hsteinmetz.jstove.jackson.ObjectMapperFactory;
 import com.hsteinmetz.jstove.model.Recipe;
 import com.hsteinmetz.jstove.normalize.RecipeNormalizer;
 import java.io.InputStream;

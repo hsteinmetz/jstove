@@ -1,4 +1,4 @@
-package com.hsteinmetz.jstove.jackson;
+package com.hsteinmetz.jstove.internal;
 
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
